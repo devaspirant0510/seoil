@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script></script>
+</head>
+<body>
+    
+</body>
+</html>
+<script>
+    let all=document.querySelectorAll("html");
+    console.log(all); // nodelist length 1
+    //시나리오:빈 html문서에 자바스크립트를 이용하여 body태그안에 화면 구성을 목적으로 한다.
+    //all변수를 통해 body에 h1 태그를 추가하고 배경색은 green, id, class를 title로 설정하고
+    //h1의 내용은 hello tag script!!
+    //만약에 존재하지 않는 속성을 만들고 싶은 경우!!
+    let h1=document.createElement("h1");
+    h1.textContent="hello tag script!!";
+    h1.style.backgroundColor="green";
+    h1.id="title";
+    h1.className="title";
+    h1.classList.add("title2");
+    h1.setAttribute("message","mymsg");
+    h1.setAttribute("data-user-id","admin"); //data-*
+    all[0].querySelector("body").appendChild(h1);
+
+    console.log(h1.dataset.userId); // user-id => userId
+
+    /*
+    document.querySelector();
+    document.getElementById();
+    document.getElementsByClassName();
+    document.getElementsByName();
+    document.getElementsByTagName()
+    */
+</script>
