@@ -1,0 +1,61 @@
+## h2 database활용
+/bin/h2.bat을 실행 후 서버를 닫으면 안됨
+서버모드로 연결할 경우 접속이 안되는 경우에 강제로 c:\users\사용자명\test.mv.db 파일 생성(메모장으로 열고 확장자까지 변경)
+
+## h2데이터베이스 테이블 생성
+-- 전화번호부 테이블
+create table phonebook(
+id int,
+name varchar(50),
+hp varchar(13),
+email varchar(50),
+memo varchar(100)
+);
+--db입력
+insert into phonebook values(1, '홍길동','010-1111-1111',' hong@my.com','친구');
+
+--스크립트를 이용한 반복문
+INSERT INTO phonebook (id, name, hp, email, memo)
+SELECT 
+  x,
+  CONCAT('홍길동', x),
+  CONCAT('010-1111-', LPAD(x, 4, '0')),
+  CONCAT('hong', x, '@my.com'),
+  '친구'
+FROM SYSTEM_RANGE(2, 10);
+
+--전체출력
+select * from phonebook;
+
+## db설계에 대한 내용을 인터페이스 작성(기능적설계:입력, 전체출력, 선택출력, 수정, 삭제)
+
+## db의 데이터필드를 자바에서 VO(Value Object)객체 생성
+db의 필드명과 자바의 필드명이 일치
+기본생성자, 필드생성자, get, set, toString함수 생성
+
+## 설계를 인터페이스를 이용하여 자바 기능 구현
+
+## Test를 진행(자바에서 테스트)
+
+## 웹에서 설계한 기능을 적용
+
+## 라이브러리 위치
+webapp/WEB-INF/lib 폴더에 jar파일을 포함하면 자동으로 라이브러리가 import됨
+
+## 단일 jsp파일이 아닌 웹 실행구조
+uri - Controller - (Service) - DAO - DB
+역순으로 이동 후 Controller에서 view페이지를 지정(jsp)하고 데이터를 이용하여 화면 구현
+
+## 수업에 참석하지 않은 경우 www프로젝트를 이클립스에서 import한 후 사용
+
+
+
+
+
+
+
+
+
+
+
+
