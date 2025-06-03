@@ -15,4 +15,5 @@
 
 ## JSP
 ### <a href="https://github.com/woogi7942/seoil/tree/main/jsp/250530">2505030 jsp환경설정 및 기초문법</a>
+### <a href="https://github.com/woogi7942/seoil/tree/main/jsp/250602">250602 코드와 화면뷰 구분하여 처리</a>
 
