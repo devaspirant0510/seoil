@@ -14,6 +14,8 @@
 ### <a href="https://github.com/woogi7942/seoil/tree/main/htmlwork/250527">2505027 js문법/bootstrap</a>
 
 ## JSP
-### <a href="https://github.com/woogi7942/seoil/tree/main/jsp/250530">2505030 jsp환경설정 및 기초문법</a>
+### <a href="https://github.com/woogi7942/seoil/tree/main/jsp/250530">250530 jsp환경설정 및 기초문법</a>
 ### <a href="https://github.com/woogi7942/seoil/tree/main/jsp/250602">250602 코드와 화면뷰 구분하여 처리</a>
+### <a href="https://github.com/woogi7942/seoil/tree/main/jsp/250603">250603 파일업로드</a>
+
 
