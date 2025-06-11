@@ -89,3 +89,10 @@ service=new MemberService(getServletContext());
 리스너 : contextInitialized(ServletContextEvent sce)
 필터 :init(), doFilter();
 서블릿 : init(), service(), doGet(), doPost() 
+
+##index.html을 필터로부터 제외하는 방법
+web.xml에 아래 내용 추가
+<servlet-mapping>
+  <servlet-name>default</servlet-name>
+  <url-pattern>*.html</url-pattern>
+</servlet-mapping>
