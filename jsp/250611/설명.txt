@@ -3,6 +3,7 @@ request, session, context(application)
 
 ##파라메다
 전역 파라메다(Context)
+
 서블릿 클래스 파라메다(web.xml에서 
   <servlet>
   <init-param>
@@ -18,6 +19,7 @@ request, session, context(application)
 <param-name>driver</param-name>
 <param-value>org.h2.Driver</param-value>
 </context-param> 
+
 #객체파라메다
 <servlet>
   <servlet-name>membercontroller</servlet-name>
@@ -56,5 +58,34 @@ init()함수에서 아래와 같이 context를 전달하여 사용
 public void init(){
 service=new MemberService(getServletContext());
 }
-##필터
 
+##필터
+필터는 웹서블릿이 동작 되기 전 작동하는 클래스
+<filter>
+<filter-name>CharacterEncodingFilter</filter-name>
+<filter-class>member.CharacterEncodingFilter</filter-class>
+</filter> 
+<filter-mapping>
+<filter-name>CharacterEncodingFilter</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping> 
+
+
+##아파치 톰캣 서버의 실행순서
+리스너(등록하면 처음 실행)
+필터(처음실행x)
+서블릿(처음실행x)
+
+필터, 서블릿은 언제실행될까?uri가 실행 될 때
+
+실행순서:리스너->필터->서블릿
+
+##리스너, 필터, 서블릿을 어노테이션으로 사용하는 명령
+리스너: @WebListener
+필터:@WebFilter("/*")
+서블릿:@WebServlet("/")
+
+##리스너, 필터, 서블릿에 사용되는 함수
+리스너 : contextInitialized(ServletContextEvent sce)
+필터 :init(), doFilter();
+서블릿 : init(), service(), doGet(), doPost() 
