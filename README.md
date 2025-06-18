@@ -26,6 +26,7 @@
 
 ## SPRING
 ### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250616">250616 SPRING 기초</a>
+### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250617">250617 SPRING DI/DB/LOG</a>
 
 
 
