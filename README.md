@@ -28,6 +28,7 @@
 ### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250616">250616 SPRING 기초</a>
 ### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250617">250617 SPRING DI/DB/LOG</a>
 ### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250618">250618 SPRING WEBMVC</a>
+### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250619">250619 SPRING WEBMV[전체리스트/상세보기/수정/삭제]C</a>
 
 
 
