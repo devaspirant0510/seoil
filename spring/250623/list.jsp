@@ -76,6 +76,12 @@ System.out.printf("전체페이지:%d\n",totalPage);
 
 
 int requestPage=1;//요청한페이지 or 현재페이지 ->수동입력
+//페이지에 요청 페이지가 전달되는 경우
+String _requestPage=request.getParameter("requestPage");
+if(_requestPage!=null){
+	requestPage=Integer.parseInt(_requestPage);
+}
+//http://localhost:8888/board/list.jsp?requestPage=3
 //요청한 페이지에 대한 시작글번호와 끝글번호가 필요
 //글의 시작번호, 글의 끝번호
 //고려사항:글의 번호가 순서적으로 되어 있다고 가정
@@ -106,7 +112,7 @@ System.out.printf("네이게이트 끝페이지 :%d\n",endPage);
 
 //이전페이지 다음페이지 표시 여부 확인 속성
 boolean isPre=false;
-boolean isNext=true;
+boolean isNext=false;
 //시나리오: 요청한 페이지 1~5페이지일 경우 이전페이지 클릭 비활성화
 //시나리오: 요청한 페이지 6~10페이지일 경우 이전페이지, 다음페이지 클릭 활성화
 //시나리오: 요청한 페이지 11페이지일 경우 이전페이지 활성화, 다음페이지 비활성화
@@ -114,7 +120,7 @@ boolean isNext=true;
 if(requestPage>5) isPre=true;
 //시나리오 요청한 페이지:11page, 전체페이지:12page, 마지막페이지:12page
 //11페이지에서 전체페이지 endPage:12page
-if(totalPage>=endPage) isNext=false;
+if(endPage<totalPage) isNext=true;
 System.out.println("네이게이트 이전링크표시여부:\n"+isPre);
 System.out.println("네이게이트 다음링크표시여부:\n"+isNext);
 
@@ -214,13 +220,21 @@ conn.close();
             <%}%>    
                 <%for(int i=startPage;i<=endPage;i++){ %>
                 <li class="page-item">
-                <a class="page-link" href="#"><%=i%></a>
-                </li>
-                <% } %>
+                <a class="page-link" href="/board/list.jsp?requestPage=<%=i%>"><%=i%></a>
+                </li>         
+                <% 
+                	//문제:요청한페이지와 화면에 표시될 페이지가 같은 경우 active를 class에 추가하기 
+	                if(requestPage==i){
+	                	
+	                }else{	                	
+	           
+	                }
+                } 
+                %>
                 
              <% if(isNext){ %>
                 <li class="page-item">
-                    <a class="page-link" href="#">다음</a>
+                    <a class="page-link" href="/board/list.jsp?requestPage=<%=startPage+5%>">다음</a>
                 </li>
               <% }  %>
             </ul>
