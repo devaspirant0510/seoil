@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page import="board.Writing"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.sql.ResultSet"%>
@@ -119,8 +120,8 @@ System.out.println("네이게이트 다음링크표시여부:\n"+isNext);
 
 //시나리오:시작글번호와 끝글번호에 대한 리스트데이터
 List<Writing> list=new ArrayList();
-startnum=1; //글의 시작번호
-endnum=10; //글의 끝번호
+//startnum=1; //글의 시작번호
+//endnum=10; //글의 끝번호
 conn=DriverManager.getConnection(url, user, password);
 //sql="select * from (select rownum rid,t1.* from (select * from board order by id asc) t1) where rid>=11 and rid<=20";
 StringBuffer sql2=new StringBuffer();
@@ -144,19 +145,89 @@ while(rs.next()){
 	write.setViewcnt(rs.getInt("viewcnt"));
 	list.add(write);
 }
+//jsp페이지 내에서는 ${}를 사용하기 위해서 setAttribute에 저장
+request.setAttribute("list",list); 
 System.out.println(list);
 rs.close();
 ps.close();
 conn.close();
 %>
-
+<!-- 위쪽은 jsp코드로서 데이터를 획득/아래쪽은 데이터로 화면표시 -->
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>게시판 테이블</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+    <div class="container mt-5">
+        <h2 class="mb-4">게시판</h2>
+        <div><%=totalCount%>개의 글(현재<%=requestPage%>page/전체<%=totalPage%>page)</div>
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">작성자</th>
+                    <th scope="col">작성일</th>
+                    <th scope="col">조회수</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Writing 데이터를 반복처리 -->
+                <c:forEach var="board" items="${list}">
+                <tr>
+                    <td name="id">${board.id}</td>
+                    <td name="title">${board.title}</td>
+                    <td name="author">${board.author}</td>
+                    <td name="createdate">${board.createdate}</td>
+                    <td name="viewcnt">${board.viewcnt}</td>
+                </tr>
+                </c:forEach>
+            </tbody>
+        </table>
 
+        <!-- 페이지 네비게이션 -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+            <% 
+            //if(isPre){ 
+            %>
+                <li id="pre" class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">이전</a>
+                </li>
+            <% 
+            //}
+            if(isPre){
+            %>
+            <script>
+            document.getElementById("pre").disabled="false";
+            </script>
+            <%	
+            }else{
+            %>
+            <script>
+            document.getElementById("pre").disabled="true";
+            </script>
+            <%}%>    
+                <%for(int i=startPage;i<=endPage;i++){ %>
+                <li class="page-item">
+                <a class="page-link" href="#"><%=i%></a>
+                </li>
+                <% } %>
+                
+             <% if(isNext){ %>
+                <li class="page-item">
+                    <a class="page-link" href="#">다음</a>
+                </li>
+              <% }  %>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Bootstrap JS (선택사항) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
