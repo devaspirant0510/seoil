@@ -1,11 +1,16 @@
 package board;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.resource.HttpResource;
 
 @Controller
 @RequestMapping("/board")
@@ -38,8 +43,37 @@ public class BoardController {
 		return "writeform";
 	}
 	
-	public String write(BoardForm form){return null;}
+	@RequestMapping("write")
+	public void write(BoardForm form,HttpServletResponse response){
+		System.out.println(form);
+		int result=service.save(form);
+		if(result>0) {
+		try {
+			response.getOutputStream().write("<script>alert('입력성공!')</script>".getBytes());
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}else {
+		try {
+			response.getOutputStream().write("<script>alert('입력실패!')</script>".getBytes());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
+		try {
+			response.getOutputStream().flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//저장할객체는 ViewBoard.java
 	public ModelAndView view(int id){return null;}
+	
 	public ModelAndView updateform(int id){return null;}
 	public String update(UpdateForm form){return null;}
 	public String delete(int id){return null;}

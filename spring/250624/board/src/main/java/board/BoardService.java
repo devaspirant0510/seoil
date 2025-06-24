@@ -65,4 +65,14 @@ public class BoardService {
 			return null;
 		}
 	}
+
+	public int save(BoardForm form) {
+		Board board=new Board();
+		board.setTitle(form.getTitle());
+		board.setContent(form.getContent());
+		board.setAuthor(form.getAuthor());
+		board.setAttachment(form.getAttachment());
+		board.setType("일반게시판");
+		return dao.save(board);
+	}
 }

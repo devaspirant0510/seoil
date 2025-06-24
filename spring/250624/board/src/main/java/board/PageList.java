@@ -22,7 +22,7 @@ public class PageList {
 	//private int endnum;      //글끝번호 
 	private int startPage;   //네비게이트 시작번호
 	private int endPage;     //네비게이트 끝번호
-	private boolean isPre;   //네비게이트 이전표시여부
-	private boolean isNext;  //네비게이트 다음표시여부
+	private boolean isPre;   //네비게이트 이전표시여부 getPre(),setPre(); ->is함수는 is가 제거된상태에서 처리
+	private boolean isNext;  //네비게이트 다음표시여부 getNext(),setNext();
 	List<BoardList> list;    //게시판 페이지 리스트
 	}

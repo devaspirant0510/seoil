@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -13,7 +14,11 @@
     <div class="container mt-5">
         <h2 class="mb-4">게시판</h2>
         <div>${pageList.totalCount}개의 글
-        (현재${pageList.currentPage}page/전체${pageList.totalPage}page)</div>
+        (현재${pageList.currentPage}page/전체${pageList.totalPage}page)
+        <button class="btn btn-primary" 
+        onclick="location.href='/board/writeform'">글쓰기</button>
+        
+        </div>
         <table class="table table-bordered table-hover">
             <thead class="table-light">
                 <tr>
@@ -31,7 +36,9 @@
                     <td name="id">${board.id}</td>
                     <td name="title">${board.title}</td>
                     <td name="author">${board.author}</td>
-                    <td name="createdate">${board.createdate}</td>
+                    <td name="createdate">
+                    <fmt:formatDate value="${board.createdate}" pattern="yyyy/MM/dd"/>
+                    </td>
                     <td name="viewcnt">${board.viewcnt}</td>
                 </tr>
                 </c:forEach>

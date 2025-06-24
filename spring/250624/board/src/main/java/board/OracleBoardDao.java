@@ -21,8 +21,23 @@ public class OracleBoardDao implements BoardDao{
 	}
 	@Override
 	public int save(Board board) {
-		// TODO Auto-generated method stub
-		return 0;
+		String sql="insert into board(id,title,content,author,type,attachment,createdate,viewcnt) "
+				+ "valus(board_id_seq,?,?,?,?,?,sysdate,0)";
+		try {
+		PreparedStatement ps
+		=ds.getConnection().prepareStatement(sql.toString());
+		ps.setString(1, board.getTitle());
+		ps.setString(2, board.getContent());
+		ps.setString(3, board.getAuthor());
+		ps.setString(4, board.getType());
+		ps.setString(5, board.getAttachment());
+		int result=ps.executeUpdate();
+		ps.close();
+		return result;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}	
 	}
 
 	@Override
