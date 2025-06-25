@@ -32,7 +32,7 @@
             <tbody>
                 <!-- Writing 데이터를 반복처리 -->
                 <c:forEach var="board" items="${pageList.list}">
-                <tr>
+                <tr onclick="location.href='/board/view?id=${board.id}'">
                     <td name="id">${board.id}</td>
                     <td name="title">${board.title}</td>
                     <td name="author">${board.author}</td>

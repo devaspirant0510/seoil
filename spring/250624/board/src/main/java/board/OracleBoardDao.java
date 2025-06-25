@@ -76,8 +76,30 @@ public class OracleBoardDao implements BoardDao{
 
 	@Override
 	public Board findById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql="select * from board where id=?";
+		try {
+		PreparedStatement ps
+		=ds.getConnection().prepareStatement(sql.toString());
+		ps.setInt(1, id);
+		ResultSet rs=ps.executeQuery();
+		if(rs.next()){
+			Board board=new Board();
+			board.setId(rs.getInt("id"));
+			board.setTitle(rs.getString("title"));
+			board.setAuthor(rs.getString("author"));
+			board.setContent(rs.getString("content"));
+			board.setCreatedate(rs.getDate("createdate"));
+			board.setViewcnt(rs.getInt("viewcnt"));
+			board.setAttachment(rs.getString("attachment"));
+			board.setType(rs.getString("type"));
+			rs.close(); ps.close();
+			return board;
+		}
+			return null;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
@@ -110,6 +132,21 @@ public class OracleBoardDao implements BoardDao{
 			System.out.println(e.getMessage());
 		}
 		return 0;
+	}
+	@Override
+	public int viewcntup(int id) {
+		String sql="update board set viewcnt=viewcnt+1 where id=?";
+		try {
+			PreparedStatement ps=ds.getConnection().prepareStatement(sql);
+			ps.setInt(1, id);
+			int result=ps.executeUpdate();
+			ps.close();
+			return result;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+		
 	}
 
 }

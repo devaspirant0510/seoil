@@ -72,7 +72,13 @@ public class BoardController {
 	}
 	
 	//저장할객체는 ViewBoard.java
-	public ModelAndView view(int id){return null;}
+	@RequestMapping("view")
+	public ModelAndView view(int id,ModelAndView mv){
+		//view.jsp의 데이터정보확인 후 객체생성(BoardViewPage.java)
+		mv.addObject("page", service.viewPage(id)); 
+		mv.setViewName("view");
+		return mv;
+	}
 	
 	public ModelAndView updateform(int id){return null;}
 	public String update(UpdateForm form){return null;}

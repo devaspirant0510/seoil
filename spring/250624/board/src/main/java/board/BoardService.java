@@ -3,6 +3,7 @@ package board;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,5 +75,14 @@ public class BoardService {
 		board.setAttachment(form.getAttachment());
 		board.setType("일반게시판");
 		return dao.save(board);
+	}
+
+	public BoardViewPage viewPage(int id) {
+		//조회수 1증가 코드작성
+		dao.viewcntup(id);
+		//뷰정보 요청하는 코드 작성
+		BoardViewPage page=new BoardViewPage();
+		BeanUtils.copyProperties(dao.findById(id), page);
+		return page;
 	}
 }

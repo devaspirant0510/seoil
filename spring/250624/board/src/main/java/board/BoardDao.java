@@ -10,4 +10,5 @@ public interface BoardDao {
 	public int update(Board board);
 	public int delete(int id); 
 	public int count();
+	public int viewcntup(int id);
 }
