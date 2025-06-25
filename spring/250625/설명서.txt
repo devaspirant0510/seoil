@@ -41,11 +41,16 @@ insert into reboard(id,title,author,createdate,content,attachment,viewcnt,type,i
 --전체출력
 select * from reboard;
 
+select * from reboard 
+start with parentid=0 connect by prior id=parentid
+order siblings by id desc;
+
 --선택출력
 select * from reboard where id=1;
 
 --수정
-update reboard set title=?, author=?, createdate=?, content=?, attachment=?, viewcnt=?, type=?, isdel=0, updatedate=?, parentid=0, tab=0 where id=1;
+update reboard set title=?, author=?, createdate=?, content=?, attachment=?, viewcnt=?, type=?, isdel=0, updatedate=?, parentid=0, tab=0
+ where id=1;
 
 --삭제
 delete from reboard where id=1;
@@ -83,6 +88,13 @@ public int delete(int id);
 /reboard/rewrite                 ->rewrite() 
 
 6)url기능을 처리할 Controller-Service-Dao객체 생성 및 연결
+@Controller, @Service, @Repository, @Componet, @Configuration ...(빈생성하는 어노테이션)
+
+참고사항)
+@Autowired(required = false) : 자동으로 연결되지만 빈객체가 없어도 오류 미발생
+@Repository : 빈의 이름은 자동으로 객체명의 첫글자가 소문자인 이름이 생성
+@Repository("h2dao") : 빈의 이름은 h2dao라는 이름
+@Qualifier("h2dao") : 여러개의 빈이 있을 경우 빈 선택 어노테이션
 
 7)리스트 기능 구현하기
 URL 
