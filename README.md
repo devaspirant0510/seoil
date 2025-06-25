@@ -31,7 +31,8 @@
 ### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250619">250619 SPRING WEBMVC[전체리스트/상세보기/수정/삭제]</a>
 ### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250620">250620 Maven</a>
 ### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250623">250623 게시판1</a>
-### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250614">250624 게시판2</a>
+### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250624">250624 게시판2</a>
+### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250625">250625 댓글게시판</a>
 
 
 
