@@ -49,3 +49,13 @@ update reboard set title=?, author=?, createdate=?, content=?, attachment=?, vie
 
 --삭제
 delete from reboard where id=1;
+
+4-1)ReBoard에 인터페이스 작성(ReBoardDao.java)
+public int save(ReBoard reboard);
+public List<ReBoard> findAll();
+public ReBoard findById(int id); 
+public int update(ReBoard reboard);
+public int delete(int id);
+
+4-2)데이터를 이동할 객체(ReBoard.java)
+데이터베이스 필드명을 활용하여(변수명 동일) 객체 생성
