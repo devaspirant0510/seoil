@@ -39,11 +39,28 @@ create sequence reboard_id_seq increment by 1 start with 1;
 insert into reboard(id,title,author,createdate,content,attachment,viewcnt,type,isdel,updatedate,parentid,tab) values(reboard_id_seq.nextval,'제목입니다.','admin',sysdate,'글의 내용입니다.','a.txt',0,'일반게시판',0,null,0,0);
 
 --전체출력
+--전체출력
 select * from reboard;
 
+-- id와 parentid를 이용한 전체출력
 select * from reboard 
 start with parentid=0 connect by prior id=parentid
 order siblings by id desc;
+
+-- id와 parentid를 이용한 전체출력 중 페이지 출력
+select * from
+ (select rownum rid, t1.* from
+ (select * from reboard start with parentid=0 connect by prior id=parentid order siblings by id desc) t1
+ ) 
+where rid>=11 and rid<=20;
+
+
+--삭제된 글은 제외하고 페이지 출력하기
+select * from
+ (select rownum rid, t1.* from
+ (select * from reboard where isdel=0 start with parentid=0 connect by prior id=parentid order siblings by id desc) t1
+ ) 
+where rid>=11 and rid<=20;
 
 --선택출력
 select * from reboard where id=1;
@@ -98,3 +115,18 @@ public int delete(int id);
 
 7)리스트 기능 구현하기
 URL 
+
+
+8)임의로 댓글달기
+insert into reboard(id,title,author,createdate,
+content,type,parentid,tab) 
+values(reboard_id_seq.nextval,'RE:[110번 게시글댓글] 제목입니다.','user',sysdate,
+'2번댓글의 글의 내용입니다.','일반게시판',118,0+1);
+
+insert into reboard(id,title,author,createdate,
+content,type,parentid,tab) 
+values(reboard_id_seq.nextval,'RE:[108번 게시글댓글] 제목입니다.','user',sysdate,
+'2번댓글의 글의 내용입니다.','일반게시판',116,0+1);
+
+list.jsp에서 댓글은 tab속성을 이용하여 들여쓰기로 댓글임을 명확히 구분하는 코드 작성
+(ctag 라이브러리)
