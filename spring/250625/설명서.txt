@@ -61,3 +61,28 @@ public int delete(int id);
 데이터베이스 필드명을 활용하여(변수명 동일) 객체 생성
 
 4-3)ReBoardDao인터페이스를 활용하여 OracleReBoardDao.java @Repository객체 생성
+
+5)url기능정하기
+#댓글리스트전체보기
+/reboard/list?requestPage=x  -> list()            ->list.jsp
+#댓글쓰기폼
+/reboard/writeform              -> writeform()   ->writeform.jsp    
+#댓글쓰기처리
+/reboard/write                     -> write()
+#댓글보기(추가적인기능:수정, 삭제, 댓글달기폼, 댓글달기처리)
+/reboard/view?id=x              -> view()          ->view.jsp
+#수정폼
+/board/updateform?id=x       ->updateform() ->updateform.jsp
+#수정처리
+/board/update                     ->update()
+#삭제처리
+/board/delete?id=x              ->delete()
+#댓글달기폼
+/reboard/rewriteform?id=?   ->rewriteform() -> rewriteform.jsp
+#댓글달기처리
+/reboard/rewrite                 ->rewrite() 
+
+6)url기능을 처리할 Controller-Service-Dao객체 생성 및 연결
+
+7)리스트 기능 구현하기
+URL 
