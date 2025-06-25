@@ -59,3 +59,5 @@ public int delete(int id);
 
 4-2)데이터를 이동할 객체(ReBoard.java)
 데이터베이스 필드명을 활용하여(변수명 동일) 객체 생성
+
+4-3)ReBoardDao인터페이스를 활용하여 OracleReBoardDao.java @Repository객체 생성
