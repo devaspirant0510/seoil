@@ -45,8 +45,7 @@ select * from reboard;
 select * from reboard where id=1;
 
 --수정
-update reboard set title=?, author=?, createdate=?, content=?. attachment=?, viewcnt=?, type=?, isdel=0, updatedate=?, parentid=0, tab=0
- where id=1;
+update reboard set title=?, author=?, createdate=?, content=?, attachment=?, viewcnt=?, type=?, isdel=0, updatedate=?, parentid=0, tab=0 where id=1;
 
 --삭제
 delete from reboard where id=1;
