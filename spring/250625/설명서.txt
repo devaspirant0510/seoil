@@ -1,0 +1,52 @@
+maven web project
+1)pom.xml설정
+플러그인설정, 라이브러리 설정
+반드시 maven project update
+build path java설정
+
+2)WEB-INF폴더 생성
+
+3)WEB-INF/web.xml, dispatcher-servlet.xml 2개 파일 생성
+web.xml : DispatcherServlet.java spring파일 등록, 한글깨짐 필터 설정
+dispatcher-servlet.xml: db에 datasource빈생성, component-scan @Controller, @Service, @Repository를 객체를 빈생성역할
+ViewResolver 빈 객체생성 : jsp파일에서 setViewName함수에 이름만 사용해서 앞뒤에파일을 생성하는 역할 예)setViewName("list") -> /WEB-INF/views/list.jsp 문자열을 생성
+
+4)시스템 개발
+데이터베이스 생성
+데이터베이스 sql문작성(입력, 전체출력, 선택출력, 수정, 삭제)
+해당 데이터베이스 테이블에 대한 인터페이스 작성(설계)
+
+CREATE TABLE reboard (
+    id NUMBER PRIMARY KEY,            -- 글번호 (자동 증가)
+    title VARCHAR2(255) NOT NULL,       -- 제목
+    author VARCHAR2(100) NOT NULL,     -- 작성자 아이디
+    createdate DATE DEFAULT SYSDATE,    -- 작성일자 (기본값: 현재 시간)
+    content CLOB,                       -- 내용 (본문)
+    attachment VARCHAR2(255),          -- 첨부 파일 (BLOB 데이터 타입 사용)
+    viewcnt NUMBER DEFAULT 0,        -- 조회수 (기본값 0)
+    type VARCHAR2(50) NOT NULL,   -- 게시판 종류 (예: 공지사항, 자유게시판 등)
+    isdel number(1) DEFAULT 0 check(isdel between 0 and 1), --글삭제여부 isdel
+    updatedate DATE,	  -- 글 수정일 (수정 시 기록)
+    parentid NUMBER default 0 ,	--글의 부모id(글의 그룹) parentid
+    tab NUMBER default 0 --댓글의 깊이 tab, 부모글에 대해 댓글의 깊이 결정
+);
+
+--시퀸스 생성
+drop sequence reboard_id_seq;
+create sequence reboard_id_seq increment by 1 start with 1;
+
+--입력
+insert into reboard(id,title,author,createdate,content,attachment,viewcnt,type,isdel,updatedate,parentid,tab) values(reboard_id_seq.nextval,'제목입니다.','admin',sysdate,'글의 내용입니다.','a.txt',0,'일반게시판',0,null,0,0);
+
+--전체출력
+select * from reboard;
+
+--선택출력
+select * from reboard where id=1;
+
+--수정
+update reboard set title=?, author=?, createdate=?, content=?. attachment=?, viewcnt=?, type=?, isdel=0, updatedate=?, parentid=0, tab=0
+ where id=1;
+
+--삭제
+delete from reboard where id=1;
