@@ -39,7 +39,6 @@ create sequence reboard_id_seq increment by 1 start with 1;
 insert into reboard(id,title,author,createdate,content,attachment,viewcnt,type,isdel,updatedate,parentid,tab) values(reboard_id_seq.nextval,'제목입니다.','admin',sysdate,'글의 내용입니다.','a.txt',0,'일반게시판',0,null,0,0);
 
 --전체출력
---전체출력
 select * from reboard;
 
 -- id와 parentid를 이용한 전체출력
