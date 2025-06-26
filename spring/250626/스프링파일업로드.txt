@@ -1,4 +1,4 @@
-파일업로드시 필요한 사항
+## 파일업로드시 필요한 사항
 (1)라이브러리 등록
 <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
 	<dependency>
@@ -25,5 +25,8 @@ public class BoardForm {
 	//private String attachment; //file전송관련 name은 폼에서 제외
 }
 (4)컨트롤에 어노테이션 설정
-String write(@ModelAttribute BoardForm form, 
-			@RequestParam("attachment") MultipartFile file)
+String write(@ModelAttribute BoardForm form, @RequestParam("attachment") MultipartFile file)
+
+## 파일업로드 처리는 서비스에서 처리
+file.transferTo(new File("D:\\storage\\"+file.getOriginalFilename()));
+
