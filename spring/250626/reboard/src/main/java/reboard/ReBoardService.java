@@ -62,7 +62,8 @@ public class ReBoardService {
 						board.getAuthor(), 
 						board.getCreatedate(), 
 						board.getAttachment(), 
-						board.getViewcnt());
+						board.getViewcnt(),
+						board.getTab());
 				boardlists.add(boardlist);
 			}
 			pageList.setList(boardlists);
@@ -116,6 +117,33 @@ public class ReBoardService {
 			page.setDate(board.getUpdatedate());
 		}
 		return page;
+	}
+
+	public void replyRegister(ReplyBoardForm form, MultipartFile file) {
+		//파일저장시 파일 저장 위치
+				String path="D:\\storage\\";
+				String filename=file.getOriginalFilename();
+				String fullname=path+filename;
+				
+				try {
+				file.transferTo(new File(fullname));
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
+				//폼에서 전송된 값과, 파일의 이름을 데이터베이스 객체로 전달하여 저장
+				ReBoard board=new ReBoard.ReBoardBuilder()
+						.title(form.getTitle())
+						.content(form.getContent())
+						.author(form.getAuthor())
+						.attachment(filename)
+						.parentid(form.getParentid())
+						.tab(dao.findById(form.getParentid()).getTab()+1)
+						.build();
+				dao.replaySave(board);
+	}
+
+	public int remove(int id) {
+		return dao.delete(id);		
 	}
 	
 }

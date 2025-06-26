@@ -55,4 +55,10 @@ public class H2ReBoardDao implements ReBoardDao{
 		return 0;
 	}
 
+	@Override
+	public int replaySave(ReBoard board) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

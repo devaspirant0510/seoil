@@ -72,12 +72,23 @@ public class ReBoardController {
 	//댓글처리(입력처리유사)
 	//http://localhost:8888/reboard/reply
 	@PostMapping("reply")
-	public void reply(@ModelAttribute ReplyBoardForm form, 
+	public String reply(@ModelAttribute ReplyBoardForm form, 
 			@RequestParam("attachment") MultipartFile file) {
+		service.replyRegister(form,file);
+		return "redirect:/reboard/list";
 		
 	}
 	
+	@GetMapping("delete")
+	public String remove(int id) {
+		service.remove(id);
+		return "redirect:/reboard/list";
+	}
 	
+	@GetMapping("img")
+	public String img() {
+		return "img";
+	}
 	
 	
 }

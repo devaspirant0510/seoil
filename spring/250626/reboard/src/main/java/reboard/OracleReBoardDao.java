@@ -123,8 +123,18 @@ public class OracleReBoardDao implements ReBoardDao{
 
 	@Override
 	public int delete(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		String sql="delete from reboard where id=?";
+		try {
+			PreparedStatement ps
+			=ds.getConnection().prepareStatement(sql);
+			ps.setInt(1, id);			
+			int result=ps.executeUpdate();
+			ps.close();
+			return result;
+			}catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}	
 	}
 	
 	@Override
@@ -160,6 +170,27 @@ public class OracleReBoardDao implements ReBoardDao{
 			return 0;
 		}
 		
+	}
+
+	@Override
+	public int replaySave(ReBoard board) {
+		String sql="insert into reboard(id,title,content,author,createdate,type,parentid,tab)"
+				+ " values(reboard_id_seq.nextval,?,?,?,sysdate,'일반게시판',?,?)";
+				try {
+					PreparedStatement ps
+					=ds.getConnection().prepareStatement(sql.toString());
+					ps.setString(1, board.getTitle());
+					ps.setString(2, board.getContent());
+					ps.setString(3, board.getAuthor());
+					ps.setInt(4, board.getParentid());
+					ps.setInt(5, board.getTab());
+					int result=ps.executeUpdate();
+					ps.close();
+					return result;
+					}catch (Exception e) {
+						e.printStackTrace();
+						return 0;
+					}	
 	}
 
 

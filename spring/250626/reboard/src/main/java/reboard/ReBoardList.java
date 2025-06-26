@@ -12,6 +12,7 @@ public class ReBoardList {
 	String title;
 	String author;
 	Date createdate;
-	String attatchment;
+	String attachment; // 철자 틀렸음
 	int viewcnt;
+	int tab;
 }

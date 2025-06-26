@@ -10,4 +10,5 @@ public interface ReBoardDao {
 	public int delete(int id);
 	public int count();
 	public int viewcntup(int id);
+	public int replaySave(ReBoard board);
 }

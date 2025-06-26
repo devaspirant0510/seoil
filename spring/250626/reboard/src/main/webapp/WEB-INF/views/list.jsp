@@ -34,7 +34,21 @@
                 <c:forEach var="board" items="${pageList.list}">
                 <tr onclick="location.href='/reboard/view?id=${board.id}'">
                     <td name="id">${board.id}</td>
-                    <td name="title">${board.title}</td>
+                    <td name="title">
+                    
+                    <!-- tab횟수에 따라 re 이미지를 반복 -->
+                    <c:forEach begin="1" end="${board.tab}">
+                    <img src="/image/reply_icon.gif" width="20px">
+                    </c:forEach>
+                    
+                    ${board.title}
+                    
+                    <!-- attachment의 파일이 존재하는지 여부를 확인하고 파일이미지표현 -->
+                    <c:if test="${not empty board.attachment}">
+                    <img src="/image/file.png" width="20px">
+                    </c:if>
+                    
+                    </td>
                     <td name="author">${board.author}</td>
                     <td name="createdate">
                     <fmt:formatDate value="${board.createdate}" pattern="yyyy/MM/dd"/>

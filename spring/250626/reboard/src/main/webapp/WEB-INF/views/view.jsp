@@ -150,7 +150,7 @@
         	var boardId = '${page.id}';
             if (confirm("정말로 삭제하시겠습니까?")) {
                 // 실제 삭제 로직 추가 (예: 서버에 삭제 요청)
-               location.href = '/board/delete?id=' + boardId;
+               location.href = '/reboard/delete?id=' + boardId;
                console.log("삭제됨");
             }
         }
