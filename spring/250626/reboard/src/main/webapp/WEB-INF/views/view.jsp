@@ -64,7 +64,7 @@
         <div class="mt-4">
             <button class="btn btn-secondary" id="editButton" onclick="toggleEditMode()">수정</button>
             <button class="btn btn-danger" id="deleteButton"onclick="deletePost()">삭제</button>
-            <button class="btn btn-warning" onclick="location.href='/reboard/rewriteform?id=${page.id}'">댓글쓰기</button>
+            <button class="btn btn-warning" onclick="location.href='/reboard/reply?id=${page.id}'">댓글쓰기</button>
         </div>
 
         <div id="saveButtons" style="display:none;">
