@@ -21,6 +21,7 @@ public class BoardViewPage {
 	private int viewcnt;
 	private String content;
 	private String attachment;
+	private int tab;
 	//아래코드가 필요한가?
 	//댓글쓰기를 누를 때 폼이 생성되는데 
 	//이때 아이디를 전달하여 parentid,tab내용 획득 후 사용(o)

@@ -2,7 +2,10 @@ package reboard;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,7 +58,24 @@ public class ReBoardController {
 		return mv;
 	}
 	
-	
+	//댓글쓰기폼
+	//http://localhost:8888/reboard/reply?id=x
+	@GetMapping("reply")
+	public String reply(@RequestParam(name = "id") int parentid, Model model) {
+		//댓글에 필요한 정보는 부모글번호,제목,댓글깊이가 필요한 경우 데이터 획득
+		//획득된 데이터를 객체로 만들지 않고 Model에 임시 저장
+		model.addAttribute("parentid", parentid);
+		model.addAttribute("title",service.getViewPage(parentid).getTitle());
+		model.addAttribute("tab",service.getViewPage(parentid).getTab());
+		return "reply"; //WEB-INF/views/reply.jsp(writeform.jsp복사)
+	}
+	//댓글처리(입력처리유사)
+	//http://localhost:8888/reboard/reply
+	@PostMapping("reply")
+	public void reply(@ModelAttribute ReplyBoardForm form, 
+			@RequestParam("attachment") MultipartFile file) {
+		
+	}
 	
 	
 	

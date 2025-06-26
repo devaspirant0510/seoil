@@ -108,6 +108,7 @@ public class ReBoardService {
 				.author(board.getAuthor())
 				.attachment(board.getAttachment())
 				.viewcnt(board.getViewcnt())
+				.tab(board.getTab())
 				.build();
 		if(board.getUpdatedate()==null) {
 			page.setDate(board.getCreatedate());
