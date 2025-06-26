@@ -1,0 +1,20 @@
+#댓글쓰기폼열기(get)
+/reboard/reply?id=?  ->reply(int id) -> reply.jsp
+id를 전달하는 이유는 부모의 정보를 얻기 위함
+
+- 컨트롤러에서 필요한 정보를 model에 저장
+model.addAttribute("parentid", parentid);
+model.addAttribute("title",service.getViewPage(parentid).getTitle());
+model.addAttribute("tab",service.getViewPage(parentid).getTab());
+
+- model에 저장된 정보를 tag lib를 이용하여 활용
+<!-- 제목에 부모글의 제목을 활용 -->
+<c:set var="re" value=""/>
+<c:forEach var="i" begin="0" end="${tab}">
+<c:set var="re" value="${re}re:"/>
+</c:forEach>
+<!-- 부모글에 대한 정보가 필요하므로 숨김으로 저장 -->
+<input type="hidden" name="parentid" value="${parentid}">
+
+#댓글쓰기처리(post)
+/reboard/reply                     ->reply() 
