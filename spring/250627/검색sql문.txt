@@ -76,12 +76,14 @@ select * from (select rownum rid, t1.* from
  where rid>=1 and rid<=10; 
 
 --검색한 제목에 대한 전체 글의갯수
- select count(*)count from(
- select * from reboard 
- where isdel=0 and title like '%10%'
- start with parentid=0 
- connect by prior id=parentid
- order siblings by id desc);
+ select count(*) count from reboard
+ where isdel=0 and 
+title like '%10%';
+
+--글의 갯수에 대한 리스트가 정상출력되는지 확인
+select * from reboard
+ where isdel=0 and 
+title like '%10%';
  
  --검색한 날짜에 대한 전체 글의갯수
  select count(*)count from(
