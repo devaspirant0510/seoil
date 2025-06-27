@@ -1,0 +1,76 @@
+#페이지 전체리스트 검색
+select * from (select rownum rid, t1.* from 
+(select * from reboard where isdel=0
+ start with parentid=0 connect by prior id=parentid
+ order siblings by id desc) t1)
+ where rid>=1 and rid<=10;
+
+#페이지 전체 갯수
+select count(*) count from reboard
+
+#전체리스트에서 게시판에서 필요한 검색필드
+제목(title), 작성자(author), 작성일(createdate)
+
+#숨겨진 검색필드사항 :  내용(content)
+확인할 사항 :  작성일 같은 필드는 범위를 필요로 한다.
+
+1)제목에 대한 검색sql
+--삭제된 내용을 제외하고 모든 내용이 검색
+ select * from reboard where isdel=0
+ start with parentid=0 connect by prior id=parentid
+ order siblings by id desc;
+ 
+--삭제된 내용을 제외하고 모든 내용이 검색
+ select * from reboard where isdel=0
+ start with parentid=0 connect by prior id=parentid
+ order siblings by id desc;
+ 
+ --삭제된 내용을 제외하고 제목검색을 통한 리스트
+ select * from reboard 
+ where isdel=0 and title like '%1%'
+ start with parentid=0 
+ connect by prior id=parentid
+ order siblings by id desc; 
+ 
+ --sql문에서 기본 검색문
+ select * from reboard where title='test'; --정확한검색
+ select * from reboard where title like '%test%'; --test글자가 들어 있는 모든 title검색
+ select * from reboard where title='test' and title like '%test%';
+ 
+ --날짜 수정
+ update reboard set createdate='2025-06-24' where id>110 and id<=115;
+ update reboard set createdate='2025-06-23' where id>105 and id<=110;
+ update reboard set createdate='2025-06-22' where id>100 and id<=105;
+ update reboard set createdate='2025-06-21' where id>95 and id<=100;
+ update reboard set createdate='2025-06-20' where id>90 and id<=95;
+ update reboard set createdate='2025-06-19' where id>85 and id<=90;
+ select * from reboard order by id desc;
+ 
+
+ --날짜 기본 구문
+ SELECT * FROM reboard WHERE createdate BETWEEN '2025-06-19' AND '2025-06-21';
+
+ --날짜에 대한 검색
+ select * from reboard 
+ where isdel=0 and createdate BETWEEN '2025-06-19' AND '2025-06-21'
+ start with parentid=0 
+ connect by prior id=parentid
+ order siblings by id desc; 
+ 
+ --페이지를 추가한 제목검색
+ select * from (select rownum rid, t1.* from 
+(select * from reboard 
+ where isdel=0 and title like '%10%'
+ start with parentid=0 
+ connect by prior id=parentid
+ order siblings by id desc) t1)
+ where rid>=1 and rid<=10; 
+ 
+ --페이지를 추가한 날짜검색
+select * from (select rownum rid, t1.* from 
+(select * from reboard 
+ where isdel=0 and createdate BETWEEN '2025-06-19' AND '2025-06-21'
+ start with parentid=0 
+ connect by prior id=parentid
+ order siblings by id desc) t1)
+ where rid>=1 and rid<=10; 
