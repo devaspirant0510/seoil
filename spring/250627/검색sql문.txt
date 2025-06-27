@@ -1,4 +1,9 @@
-#페이지 전체리스트 검색
+#SQL문의 구조
+select 필드명  from 테이블명
+where 조건
+order by 필드명 desc
+
+#페이지 전체리스트 검색 전체코드
 select * from (select rownum rid, t1.* from 
 (select * from reboard where isdel=0
  start with parentid=0 connect by prior id=parentid
@@ -15,17 +20,12 @@ select count(*) count from reboard
 확인할 사항 :  작성일 같은 필드는 범위를 필요로 한다.
 
 1)제목에 대한 검색sql
---삭제된 내용을 제외하고 모든 내용이 검색
+--삭제된 내용을 제외하고 모든 내용이 검색(where isdel=0)
  select * from reboard where isdel=0
  start with parentid=0 connect by prior id=parentid
  order siblings by id desc;
  
---삭제된 내용을 제외하고 모든 내용이 검색
- select * from reboard where isdel=0
- start with parentid=0 connect by prior id=parentid
- order siblings by id desc;
- 
- --삭제된 내용을 제외하고 제목검색을 통한 리스트
+ --삭제된 내용을 제외하고 제목검색을 통한 리스트(title like '%1%')
  select * from reboard 
  where isdel=0 and title like '%1%'
  start with parentid=0 
@@ -46,7 +46,6 @@ select count(*) count from reboard
  update reboard set createdate='2025-06-19' where id>85 and id<=90;
  select * from reboard order by id desc;
  
-
  --날짜 기본 구문
  SELECT * FROM reboard WHERE createdate BETWEEN '2025-06-19' AND '2025-06-21';
 
@@ -66,7 +65,7 @@ select count(*) count from reboard
  order siblings by id desc) t1)
  where rid>=1 and rid<=10; 
  
- --페이지를 추가한 날짜검색
+ --페이지를 추가한 날짜검색(createdate BETWEEN '2025-06-19' AND '2025-06-21')
 select * from (select rownum rid, t1.* from 
 (select * from reboard 
  where isdel=0 and createdate BETWEEN '2025-06-19' AND '2025-06-21'
@@ -84,11 +83,131 @@ title like '%10%';
 select * from reboard
  where isdel=0 and 
 title like '%10%';
- 
- --검색한 날짜에 대한 전체 글의갯수
- select count(*)count from(
- select * from reboard 
+
+--날짜 검색에 대한 전체 글의 갯수
+select count(*) count from reboard
  where isdel=0 and createdate BETWEEN '2025-06-19' AND '2025-06-21'
- start with parentid=0 
- connect by prior id=parentid
- order siblings by id desc);
+
+##MVC모델에서 확인사항
+1)필요한 입력값은 무엇인가? 검색필드, 검색값
+2)뷰페이지는 list.jsp -> searchlist.jsp로 복사하고 페이지 네비게이트의 location.href를 변경
+3)dao 작성시 sql문에 뛰워쓰기 주의
+4)다른페이지로 이동할 때 문제발생
+요청한 페이지, 검색필드, 검색값을 유지하기 위한 방법으로 해당값을 url에 파라메다로 전달(네비게이트의 location.href를 변경)
+페이지에 표시할 객체에 검색필드, 검색값 필드 추가
+
+##searchlist.jsp 추가기능 구현하기
+1)화면상에 필드를 선택했을 때 화면의 기능 전환(예:제목에서 날짜검색일 경우 화면 전환)
+2)날짜검색에 대한 기능 추가
+3)전체검색에 대한 기능 추가
+
+1)화면상에 필드를 선택했을 때 화면의 기능 전환(예:제목에서 날짜검색일 경우 화면 전환)
+<!-- 검색영역 -->
+<form action="/reboard/search" method="get" onsubmit="return confirm()">
+<span>
+<select name="searchfield" id="searchfield">
+<option value="title">제목</option>
+<option value="author">작성자</option>
+<option value="date">날짜</option>
+<option value="all">전체</option>
+</select>
+
+<input type="text" name="search" placeholder="검색입력" id="search">
+<span id="datefield">
+<input type="date" name="startserarchdate" id="sdate">~
+<input type="date" name="endserarchdate" id="edate">
+</span>
+<input type="submit" value="검색">
+</span>
+</form>
+
+<script>
+//각각의 필드를 접근가능하도록 객체 얻기
+        	const searchfield=document.getElementById("searchfield");
+            const search=document.getElementById("search");
+            const datefield=document.getElementById("datefield");
+            //const sdate=document.getElementById("sdate");
+            //const edate=document.getElementById("edate");
+//얻은 객체를 이용하여 기본 설정하기
+            //sdate.style.display="none";
+        	//edate.style.display="none";
+        	datefield.style.display="none";
+//이벤트 등록하기(값을 확인하여 설정 변경하기)
+        	searchfield.addEventListener("change",(e)=>{
+        		//alert(searchfield.value)
+        		
+        		switch(searchfield.value){
+        		case "title" : 
+        			search.style.display="inline"
+        			datefield.style.display="none";
+        			break;
+        		case "author" : 
+        			search.style.display="inline"
+        			datefield.style.display="none";
+        			break;	
+        		case "date" : 
+        			search.style.display="none"
+        			datefield.style.display="inline";
+        			break;
+        		case "all" : 
+        			search.style.display="block"
+        			datefield.style.display="inline";
+        			break;
+        		}
+        		
+        	});
+
+추가사항)url을 변경하여 처리하기
+#폼 접근방법
+<form name="form1" id="form1">
+<input type="text" name="name" value="">
+<input type="submit" value="전송">
+</form>
+
+<form>
+<input type="text" name="name" value="">
+<input type="submit" value="전송">
+</form>
+
+<script>
+document.forms[0].name.value="form1";
+document.forms[1].name.value="form2";
+document.form1.name.value=" name access form1"; //form name접근가능, id접근불가
+document.getElementById("form1id").name.value="id access form1"; //input태그를 name으로 접근가능
+
+#form action 다르게 처리하기
+<form id="form3">
+<select name="searchfield" id="searchfield">
+<option value="title">제목</option>
+<option value="author">작성자</option>
+<option value="date">날짜</option>
+<option value="all">전체</option>
+</select>
+<input type="submit" value="전송">
+</form>
+
+2)날짜검색에 대한 기능 추가
+<script>
+const form1=document.getElementById("form3")
+form3.addEventListener('submit', function(event) {
+	const searchfield=document.getElementById("searchfield");
+    // 선택된 옵션에 따라 action URL을 변경
+    if (searchfield.value === 'title') {
+    	form3.action = '/reboard/titlesearch';
+    } else if (searchfield.value === 'author') {
+    	form3.action = '/reboard/authorsearch';
+    } else if (searchfield.value === 'date') {
+    	form3.action = '/reboard/datesearch';
+    }else if (searchfield.value === 'all') {
+    	form3.action = '/reboard/allsearch';
+    }
+
+    // 만약 입력이 없으면 경고 메시지 출력
+    if (userInput.value.trim() === '') {
+        alert('입력을 채워주세요!');
+        event.preventDefault(); // 폼 제출 방지
+    }
+});
+</script>
+
+3)전체검색에 대한 기능 추가
