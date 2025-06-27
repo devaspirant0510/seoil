@@ -33,6 +33,8 @@
 ### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250623">250623 게시판1</a>
 ### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250624">250624 게시판2</a>
 ### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250625">250625 댓글게시판</a>
+### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250626">250626 댓글게시판[댓글처리/이미지리소스]</a>
+### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250627">250627 댓글게시판[검색기능]</a>
 
 
 
