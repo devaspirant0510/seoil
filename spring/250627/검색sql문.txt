@@ -74,3 +74,19 @@ select * from (select rownum rid, t1.* from
  connect by prior id=parentid
  order siblings by id desc) t1)
  where rid>=1 and rid<=10; 
+
+--검색한 제목에 대한 전체 글의갯수
+ select count(*)count from(
+ select * from reboard 
+ where isdel=0 and title like '%10%'
+ start with parentid=0 
+ connect by prior id=parentid
+ order siblings by id desc);
+ 
+ --검색한 날짜에 대한 전체 글의갯수
+ select count(*)count from(
+ select * from reboard 
+ where isdel=0 and createdate BETWEEN '2025-06-19' AND '2025-06-21'
+ start with parentid=0 
+ connect by prior id=parentid
+ order siblings by id desc);
