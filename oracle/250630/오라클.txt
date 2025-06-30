@@ -1,0 +1,197 @@
+## sql 기본문
+DDL(정의) : create, drop, alter(구조변경)
+DML(조작) : insert, select, update ,delete
+DCL(제어) : grant(권한을 부여하다), revoke(권한제거)
+DTL(트랜잭션,DCL) : commit, rollback
+
+## system계정 접속되지 않을 시 sysdba계정으로 접속
+sqlplus / as sysdba;
+alter user system identified by system;
+commit;
+connect system/system
+
+## 계정생성
+alter session set "_ORACLE_SCRIPT"=true; --스크립트 허용
+create user user1 identified by 1111; --계정생성
+select user from dual; --계정확인
+grant create session to user1; --접속권한 부여
+grant connect, resource to user1; --테이블 리소스 dml가능
+alter user test default tablespace users quota unlimited on users; --테이블 생성 공간을 크기 부여
+
+## 실습사항
+user2에 대해 계정을 만들고
+alter를 사용하지 않은 상태에서 접속처리
+권한을 부여한 후 접속이 되는지 확인(각 단계별 확인)
+create table member(
+id varchar2(10),
+password varchar2(20)
+);
+
+##계정삭제
+drop user user1 cascade; --반드시 cascade를 적용하여야 연쇄적으로 삭제됨
+
+##sql developer에서 확인
+sqlplus system/system;
+create user test identified by 1111; 
+grant create session to test; 
+grant connect, resource to test; 
+exit; --연결해제
+
+sql developer system으로 접속했을 때와 test계정으로 접속할 때 테이블 구조 차이점 확인
+
+## 자주사용하는 구조테이블
+table, view, index, procedure, function, triger, sequence
+
+##데이터베이스를 왜 사용하는가?네트워크상에서 사용(같이, 서버구성)
+sqlplus test/1111@localhost:1521/xe
+sqlplus test/1111@172.16.15.97:1521/xe
+
+#네트워크 접속관련 설정파일
+C:\oraclexe\app\oracle\product\11.2.0\server\network\ADMIN\listener.ora / tnsnames.ora
+
+##우편번호 DB처리하기
+https://www.epost.go.kr/search/zipcode/areacdAddressDown.jsp
+
+#txt를 다운받은 후 excel에서 외부데이터 불러오기를 통해  구분기호로 나누고 필요한 데이터만 남겨두고 나머지 데이터는 삭제 후 테이블 생성
+drop table postal_address;
+CREATE TABLE postal_address (
+    zipcode           VARCHAR2(6),       -- 우편번호
+    sido              VARCHAR2(30),      -- 시도
+    road_name         VARCHAR2(100),     -- 도로명
+    building_main_no  NUMBER(5),         -- 건물번호본번
+    building_sub_no   NUMBER(5),         -- 건물번호부번 (없을 경우 NULL)
+    dong                VARCHAR2(30),      -- 동 (없을 경우 NULL)
+    jibun_main_no     NUMBER(10)         -- 지번본번
+);
+
+="insert into postal_address values('" & a2 &"','" & b2 &"','"& c2 & "'," &d2 &"," & e2 &",'" & f2 & "'," & g2 &");"
+excel 데이터 테이블을 data.sql로 저장
+data.sql==data.txt파일이 상이(utf8-ansi로 변경)
+
+SQL> edit data.sql
+SQL> @data.sql
+SQL> commit;
+select zipcode, road_name from postal_address where road_name='라온로';
+
+##sqlplus
+drop table info;
+create table info(
+id int,
+name varchar2(20)
+);
+insert into info values(1,'hong1');
+insert into info values(2,'hong2');
+insert into info values(3,'hong3');
+insert into info values(4,'hong4');
+insert into info values(5,'hong5');
+
+테이블 확인: desc info; (sqlplus)
+SELECT column_name, data_type FROM user_tab_columns WHERE table_name = 'INFO';
+select colname, coltype from COL where tname='INFO';
+
+#빈값 확인 ( ' ' , NULL, null,' ')
+update info set name='';
+update info set name=NULL;
+update info set name=null;
+update info set name=' '; --space는 문자열로 취급
+
+select id, nvl(name,'빈값') from info;
+
+#구조변경
+create table student(
+ name varchar2(50), --이름
+ grade number(1),   --학년
+ address varchar2(100)  --주소
+ );
+insert into student values('홍길동','1','서울시');
+insert into student values('홍길동','2','서울시');
+
+Q)현재 테이블에서 id number형으로 primary key로 필드추가하시오.(구조변경)
+테이블 구조변경:alter table , 필드추가 : add
+만들어진 구조에서 필드가 없는상태임
+alter table (테이블명) add (일반적으로 정의할 때 코드)
+alter table student add id number primary key; (중복되지 않는 값을 입력해야 하므로 id가 가진 값이 없으므로 오류 발생)
+alter table student add id number;
+
+#구조변경으로 id제거(drop)
+alter table student drop column id;
+
+ALTER TABLE student ADD id NUMBER DEFAULT 0 NOT NULL;
+update student set id=rownum;
+alter table student add primary key(id); -- primary key(unique + not null)
+or
+alter table student add constraint student_pk primary key(id);
+desc student;
+
+##primary key의 속성을 확인하는 테이블상세보기 명령 확인
+SELECT constraint_name
+FROM user_constraints
+WHERE table_name = 'STUDENT';
+
+##필드의 순서가 마지막에 입력한 필드가 뒤쪽에 위치되므로 앞에 위치하는 방법은?
+#테이블 복사를 이용하여 맨 앞에 필드 추가하기
+테이블 복사 명령 : create table student_new as (select * from student);
+
+drop table student_new;
+
+CREATE TABLE student_new AS
+SELECT CAST(NULL AS number) AS id, T.* FROM student T;
+
+#원래의 테이블의 이름을 사용할 경우
+기존테이블은 삭제하고
+drop table student;
+새로운 테이블을 복사하여 기존테이블 이름으로 변경
+create table student as select * from student_new;
+새로운 테이블은 삭제
+ drop table student_new;
+
+##선생님에 대한 테이블생성
+create table teacher(
+ id number(3) primary key,
+ name varchar2(50), --이름
+ hp varchar2(50), --전화번호
+ address varchar2(100)  --주소
+ );
+insert into teacher values(101,'김선생','010-1111-1111','중랑구');
+insert into teacher values(102,'이선생','010-1111-2222','중랑구');
+
+#학생과 선생님 테이블간에는 관련성이 존재하지 않음
+명제 변경:학생은 1명의 담임을 가진다.(선생님은 여러명의 학생을 가진다.)
+관계:선생님테이블, 학생테이블
+학생테이블에 선생님 필드를 추가할지?(0)
+선생님테이블에 학생을 추가할지? 선생님 테이블은 중복이 발생하지 않게 처리
+
+선생님은 1 , 학생은 N의 관계일 때(1:N)
+선생님은 별도의 외부필드를 참조하지 않고
+학생은 외부필드를 참조하는 형식으로 필드를 생성한다.
+
+Q.학생테이블에 선생님 필드(teacher_id)를 추가하시오.
+alter table student add teacher_id number;
+
+Q.선생님 필드(teacher_id)는 teacher 테이블을 참조하므로 외래키(참조:references) 추가하시오.
+alter table student add foreign key(teacher_id) references teacher(id); --teacher라는 테이블의 id를 참조
+
+#조인방법
+select student.*, teacher.* 
+from student, teacher 
+where student.teacher_id=teacher.id;
+
+select * from student, teacher 
+where student.teacher_id=teacher.id;
+
+select * from student s, teacher t 
+where s.teacher_id=t.id;
+
+select s.id, s.name,t.name from student s, teacher t 
+where s.teacher_id=t.id;
+
+#학생테이블을 기준으로 선생님 테이블이 뒤에 달라붙는 구조
+select * from student s inner join teacher t 
+on s.teacher_id=t.id;
+
+select * from student, teacher;
+
+##생각해보기)학생테이블과, 선생님 테이블에서 어떤 테이블이 반드시 필요한가?
+학생은 선생님이 반드시 필요한가?반드시 필요(선생님 아이디를 참조:외래키필요)
+선생님은 학생이 반드시 필요한가?반드시 필요하지 않음
+select * from postal_address where road_name='라온로';
