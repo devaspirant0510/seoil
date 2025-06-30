@@ -195,3 +195,87 @@ select * from student, teacher;
 학생은 선생님이 반드시 필요한가?반드시 필요(선생님 아이디를 참조:외래키필요)
 선생님은 학생이 반드시 필요한가?반드시 필요하지 않음
 select * from postal_address where road_name='라온로';
+
+예제)회원테이블(아이디/번호, 비밀번호, 이름, 주소, 전화번호, 이메일주소)
+상품테이블(상품번호/번호, 물품명, 가격, 재고수량)
+두 테이블의 관계를 정의하고(회원을 물품을 반드시 구매한다.)
+테이블을 생성하시오.
+
+회원테이블-구매테이블-상품테이블
+
+구매테이블에 필요한 정보(회원아이디, 물품아이디, 주문시간, 수량)
+어떠한 회원이 어떠한 물품을 구매했고, 이때 구매한 시간, 구매한 수량
+
+#회원테이블
+drop table member;
+CREATE TABLE MEMBER (
+    ID      VARCHAR2(20) PRIMARY KEY,       -- 아이디 (회원번호 겸용)
+    PASSWORD       VARCHAR2(100) NOT NULL,         -- 비밀번호 (해싱 고려 가능)
+    NAME           VARCHAR2(50) NOT NULL,          -- 이름
+    ADDRESS        VARCHAR2(200),                  -- 주소
+    HP   VARCHAR2(20),                   -- 전화번호
+    EMAIL          VARCHAR2(100)                   -- 이메일주소
+);
+
+#상품테이블
+drop table product;
+CREATE TABLE PRODUCT (
+    ID     VARCHAR2(20) PRIMARY KEY,      -- 상품번호 (고유값)
+    NAME   VARCHAR2(100) NOT NULL,        -- 물품명
+    PRICE          NUMBER(10, 2) NOT NULL,        -- 가격 (소수점 2자리까지 허용)
+    STOCK_QUANTITY NUMBER(10) DEFAULT 0           -- 재고수량 (기본값 0)
+);
+#구매테이블
+drop table purchase;
+CREATE TABLE PURCHASE (
+    ID    NUMBER  PRIMARY KEY, -- 구매 ID (자동 증가)
+    MEMBER_ID      VARCHAR2(20) NOT NULL,            -- 회원아이디
+    PRODUCT_ID     VARCHAR2(20) NOT NULL,            -- 물품아이디
+    ORDER_TIME     TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 주문시간 (기본값: 현재 시간)
+    QUANTITY       NUMBER(10) NOT NULL,              -- 수량
+    FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER (ID), -- 외래키: 회원아이디
+    FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCT (ID) -- 외래키: 물품아이디
+);
+
+INSERT INTO MEMBER (ID, PASSWORD, NAME, ADDRESS, HP, EMAIL) VALUES
+('M001', 'password123', '김철수', '서울특별시 강남구 역삼동', '010-1234-5678', 'kimcs@example.com');
+INSERT INTO MEMBER (ID, PASSWORD, NAME, ADDRESS, HP, EMAIL) VALUES
+('M002', 'securepassword456', '이영희', '서울특별시 송파구 방이동', '010-2345-6789', 'leeyh@example.com');
+INSERT INTO MEMBER (ID, PASSWORD, NAME, ADDRESS, HP, EMAIL) VALUES
+('M003', 'mypassword789', '박민수', '부산광역시 해운대구', '010-3456-7890', 'parkms@example.com');
+
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK_QUANTITY) VALUES
+('P001', '아이폰 14', 1200000.00, 50);
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK_QUANTITY) VALUES
+('P002', '삼성 갤럭시 S23', 1050000.00, 30);
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK_QUANTITY) VALUES
+('P003', 'LG 65인치 UHD TV', 1500000.00, 20);
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK_QUANTITY) VALUES
+('P004', '에어팟 프로', 250000.00, 100);
+
+INSERT INTO PURCHASE (MEMBER_ID, PRODUCT_ID,QUANTITY) VALUES
+('M001', 'P001', 1),
+('M001', 'P004', 2),
+('M002', 'P003', 1),
+('M003', 'P002', 1),
+('M003', 'P004', 3);
+
+Q.위의 코드에서 필요한 사항은?
+구매에서 구매한 시간을 자동으로 입력
+INSERT INTO PURCHASE (MEMBER_ID, PRODUCT_ID, ORDER_TIME, QUANTITY) VALUES (x,x,sysdate,x);
+테이블이 추가될 때 중복되지 않고, 비어 있지 않은 아이디가 필요할 때 특정한 값이 아니라면 시퀸스 추가
+create sequence purchase_id_seq;
+INSERT INTO PURCHASE (ID, MEMBER_ID, PRODUCT_ID, ORDER_TIME, QUANTITY) VALUES (purchase_id_seq.nextval,x,sysdate,x);
+
+#최종수행코드
+create sequence purchase_id_seq;
+INSERT INTO PURCHASE (id, MEMBER_ID, PRODUCT_ID,order_time,QUANTITY) VALUES
+(purchase_id_seq.nextval,'M001', 'P001',sysdate, 1);
+INSERT INTO PURCHASE (id, MEMBER_ID, PRODUCT_ID,order_time,QUANTITY) VALUES
+(purchase_id_seq.nextval,'M001', 'P004',sysdate, 2);
+INSERT INTO PURCHASE (id, MEMBER_ID, PRODUCT_ID,order_time,QUANTITY) VALUES
+(purchase_id_seq.nextval,'M002', 'P003',sysdate, 1);
+INSERT INTO PURCHASE (id, MEMBER_ID, PRODUCT_ID,order_time,QUANTITY) VALUES
+(purchase_id_seq.nextval,'M003', 'P002',sysdate, 1);
+INSERT INTO PURCHASE (id, MEMBER_ID, PRODUCT_ID,order_time,QUANTITY) VALUES
+(purchase_id_seq.nextval,'M003', 'P004',sysdate, 3);
