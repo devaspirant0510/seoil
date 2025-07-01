@@ -39,5 +39,5 @@
 
 ## ORACLE
 ### <a href="https://github.com/woogi7942/seoil/tree/main/oracle/250630">250630 데이터베이스 기초</a>
-
+### <a href="https://github.com/woogi7942/seoil/tree/main/oracle/250701">250701 데이터베이스 문제</a>
 
