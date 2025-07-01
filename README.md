@@ -35,6 +35,7 @@
 ### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250625">250625 댓글게시판</a>
 ### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250626">250626 댓글게시판[댓글처리/이미지리소스]</a>
 ### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250627">250627 댓글게시판[검색기능]</a>
+### <a href="https://github.com/woogi7942/seoil/tree/main/spring/250701">250701 DB DataSource</a>
 
 ## ORACLE
 ### <a href="https://github.com/woogi7942/seoil/tree/main/oracle/250630">250630 데이터베이스 기초</a>
