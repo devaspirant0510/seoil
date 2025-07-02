@@ -1,22 +1,25 @@
 예제)학생(Student), 과목(Course), 수강신청(Enrollment) 테이블의 관계
 학생은 과목을 수강신청한다.
 -- 학생 테이블 생성
+drop table student;
 CREATE TABLE Student (
     id INT PRIMARY KEY,        -- 학생 ID
     name VARCHAR2(100) NOT NULL -- 학생 이름
 );
 
 -- 과목 테이블 생성
+drop table course;
 CREATE TABLE Course (
     id INT PRIMARY KEY,         -- 과목 ID
     name VARCHAR2(100) NOT NULL -- 과목 이름
 );
 
 -- 수강신청 테이블 생성
+drop table Enrollment;
 CREATE TABLE Enrollment (
     student_id INT,                    -- 학생 ID
     course_id INT,                     -- 과목 ID
-    date DATE,              -- 수강 신청 날짜
+    coursedate DATE,              -- 수강 신청 날짜
     PRIMARY KEY (student_id, course_id), -- 학생과 과목의 조합이 유니크하도록 설정
     FOREIGN KEY (student_id) REFERENCES Student(id),
     FOREIGN KEY (course_id) REFERENCES Course(id)
@@ -42,13 +45,13 @@ INSERT INTO Course (id, name) VALUES (4, '운영체제');
 INSERT INTO Course (id, name) VALUES (5, '네트워크');
 
 -- 수강 신청 데이터 입력
-INSERT INTO Enrollment (student_id, course_id, date) VALUES (1, 1, TO_DATE('2025-07-01', 'YYYY-MM-DD'));
-INSERT INTO Enrollment (student_id, course_id, date) VALUES (2, 2, TO_DATE('2025-07-01', 'YYYY-MM-DD'));
-INSERT INTO Enrollment (student_id, course_id, date) VALUES (3, 3, TO_DATE('2025-07-02', 'YYYY-MM-DD'));
-INSERT INTO Enrollment (student_id, course_id, date) VALUES (4, 4, TO_DATE('2025-07-02', 'YYYY-MM-DD'));
-INSERT INTO Enrollment (student_id, course_id, date) VALUES (5, 5, TO_DATE('2025-07-03', 'YYYY-MM-DD'));
-INSERT INTO Enrollment (student_id, course_id, date) VALUES (6, 1, TO_DATE('2025-07-03', 'YYYY-MM-DD'));
-INSERT INTO Enrollment (student_id, course_id, date) VALUES (7, 2, TO_DATE('2025-07-04', 'YYYY-MM-DD'));
-INSERT INTO Enrollment (student_id, course_id, date) VALUES (8, 3, TO_DATE('2025-07-04', 'YYYY-MM-DD'));
-INSERT INTO Enrollment (student_id, course_id, date) VALUES (9, 4, TO_DATE('2025-07-05', 'YYYY-MM-DD'));
-INSERT INTO Enrollment (student_id, course_id, date) VALUES (10, 5, TO_DATE('2025-07-05', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (1, 1, TO_DATE('2025-07-01', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (2, 2, TO_DATE('2025-07-01', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (3, 3, TO_DATE('2025-07-02', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (4, 4, TO_DATE('2025-07-02', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (5, 5, TO_DATE('2025-07-03', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (6, 1, TO_DATE('2025-07-03', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (7, 2, TO_DATE('2025-07-04', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (8, 3, TO_DATE('2025-07-04', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (9, 4, TO_DATE('2025-07-05', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (10, 5, TO_DATE('2025-07-05', 'YYYY-MM-DD'));
