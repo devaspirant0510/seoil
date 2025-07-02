@@ -119,3 +119,238 @@ begin
     dbms_output.put_line(i);
     end loop;
 end;
+
+##뷰권한생성을 가지는 명령(system에서 권한 처리)
+GRANT CREATE VIEW TO 사용자_이름;
+
+##view, index, procedure(리턴없음/단순처리), function(리턴있음), trigger
+#view
+create view 뷰명 as select구문
+#index
+create index 인덱스명 on 테이블명(필드)
+
+#function
+--function
+create function testfunc
+return number
+is
+--변수정의
+a number;
+begin
+a:=20;
+return a;
+end;
+
+--testfunc()
+select testfunc() from dual;
+
+--위의 funtion을 다시 정의하고 실행하면 오류 발생
+create or replace function testfunc
+return number
+is
+--변수정의
+a number;
+begin
+a:=20;
+return a;
+end;
+
+--function을 만들고 emp테이블의 근로자의 총 수를 확인하는 함수 작성
+select count(*) from emp;
+
+create or replace function empcount
+return number
+is
+cnt number:=0;
+begin
+--cnt:=select count(*) from emp; --오류발생
+select count(*) into cnt from emp;
+return cnt;
+end;
+
+--확인방법1
+select empcount() from dual;
+
+--확인방법2
+begin
+DBMS_OUTPUT.PUT_LINE(empcount());
+end;
+
+
+create or replace function empcount
+return number
+is
+cnt number:=0;
+begin
+select count(*) into cnt from emp;
+DBMS_OUTPUT.PUT_LINE(cnt);
+return cnt;
+end;
+
+--입력값을 전달하는 함수
+create or replace function empcount(i in number)
+return number
+is
+cnt number:=0;
+begin
+select count(*) into cnt from emp;
+cnt:=cnt+i;
+return cnt;
+end;
+
+select empcount(1) from dual;
+
+예제)
+create table sungjuk(
+  id number,
+  kor number,
+  eng number,
+ math number);
+insert into sungjuk values(1,100,80,70);
+insert into sungjuk values(2,90,80,90);
+insert into sungjuk values(3,80,80,80);
+select sum(kor) from sungjuk;
+
+문제)아래의 명령이 실행되도록 score라는 함수를 만들어
+필드명을 입력하면 해당 필드의 합계가 출력되는 함수 생성을 하시오.
+select score('kor') from dual;
+select score('eng') from dual;
+select score('math') from dual;
+
+#프로시저 생성
+create or replace procedure pro01
+is
+begin
+--select * from emp; --select 처리시 오류발생
+insert into test values(1,'홍길동1');
+insert into test values(2,'홍길동2');
+insert into test values(3,'홍길동3');
+end;
+--프로시저 실행방법
+execute  pro01;
+select * from test;
+
+--예제)test테이블에 아이디, 이름을 파라메다로 입력받고 처리하는 
+--test_insert 프로시저를 작성하시오.
+create or replace procedure test_insert(id number, name varchar2)
+is
+begin
+insert into test values(id, name);
+end;
+
+execute test_insert(4,'김길동');
+exec test_insert(4,'김길동');
+select * from test;
+
+--자바에서 프로시저 사용하기
+Class.forName("oracle.jdbc.driver.OracleDriver");
+		String url="jdbc:oracle:thin:@localhost:1521:xe";
+		String user="test";
+		String password="1111";
+		Connection conn=DriverManager.getConnection(url, user, password);
+		//프로시저 방법 test_insert(id, name)
+		PreparedStatement ps
+		//=conn.prepareStatement("{call test_insert(?, ?)}");
+		=conn.prepareCall("{call test_insert(?, ?)}");
+		ps.setInt(1, 7);
+		ps.setString(2,"염길동");
+		System.out.println(ps.execute());
+		ps.close(); conn.close();
+
+#트리거
+create table test(
+id number,
+name varchar2(20)
+);
+
+create table test2(
+id number,
+name varchar2(20)
+);
+--시나리오:test2에 값을 입력하면 test에 값이 입력되게 처리
+create or replace trigger tri01
+after insert on test2
+begin
+insert into test values(1,'홍길동1');
+insert into test values(2,'홍길동2');
+insert into test values(3,'홍길동3');
+end;
+
+select * from test;
+select * from test2;
+
+insert into test2 values(1,'홍길동');
+-- test2테이블이 삭제 될 때 test의 모든 테이블이 삭제되도록 처리
+create or replace trigger tri01
+after delete on test2
+begin
+delete from test;
+end;
+
+#패키지 생성
+패키지안에 넣을 수 있는 명령은 프로시저, 함수, 파라미터, 리턴정의
+create or replace package 패키지명
+as
+	procedure testinsert;
+	funtion 함수명 return 리턴형;
+end 패키지명;
+
+프로시저와 함수를 정의하여 사용하는 방법
+create or replace package 패키지명
+as
+	procedure 프로시저명1
+	is 
+	begin
+	end 프로시저명1
+
+	procedure 프로시저명2
+	is 
+	begin
+	end 프로시저명2
+
+	funtion 함수명 return 리턴형
+	is
+	begin
+
+	return 리턴값
+	end 함수명;
+end 패키지명;
+
+##alter정리(구조변경)
+#구조추가(add): 
+나이필드를 추가하세요? 
+alter table test1 add age int;
+
+#구조 변경(modify):
+num필드를 varchar2(10) 속성으로 변경하세요? 
+alter table test1 modify num varchar2(10);
+
+#구조 삭제(drop):
+age필드를 삭제하세요?
+alter table test1 drop age;(x)
+alter table test1 drop column age;(o)
+
+#제약조건추가(add): 필드가 없을 때
+주의할 사항:현재필드의 속성을 정확히 알고 있어야함
+alter table test1 add age int not null; (현재 필드가 존재하지 않는 상태)
+
+#제약조건 변경(modify)한다는 의미는 필드가 있을 때
+alter table test1 modify age int not null;(수정가능)
+alter table test1 modify age not null;(수정가능)-제약조건 추가하면 기존속성 유지
+
+#제약조건삭제(modify):
+age의 제약조건인 not null을 없애는 방법
+alter table test1 modify age int null;
+
+#테이블명 변경(rename to):
+test1을 test2로변경
+alter table test1 rename to test2;
+
+#컬럼이름 변경(rename column):
+num필드명을 id로 변경
+alter table test2 rename column num to id;
+
+#테이블복사
+insert into test2 values(1,'hong1',20);
+insert into test2 values(2,'hong2',30);
+create table test1 as select * from test2;
