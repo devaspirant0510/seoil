@@ -1,5 +1,7 @@
 package mybatis;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,5 +14,17 @@ public class MemberService {
 	//mybatis에서 VO객체를 사용하려면 빈생성(@Componet) 
 	public int save(String id, String password) {
 		return mapper.save(id, password);
+	}
+	public Member getMember(String id) {
+		return mapper.findById(id);
+	}
+	public List<Member> getMemberList() {
+		return mapper.findAll();
+	}
+	public int update(Member member) {
+		return mapper.update(member);		
+	}
+	public int delete(String id) {
+		return mapper.delete(id);
 	}
 }

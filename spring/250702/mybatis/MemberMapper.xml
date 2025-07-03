@@ -4,4 +4,27 @@
 <insert id="save">
 insert into member(id,password) values(#{id},#{password})
 </insert>
+
+<select id="findById" resultType="mybatis.Member">
+select * from member where id=#{id}
+</select>
+
+<select id="findAll" resultType="mybatis.Member">
+select * from member
+</select>
+
+<!-- parameterType이 있을 경우 변수명만 적어면 됨(실제는 get함수 호출) -->
+<update id="update" parameterType="mybatis.Member" >
+update member set password=#{password} where id=#{id}
+</update>
+
+<!-- parameterType이 없는 경우 : map구조에서 사용가능? -->
+<!-- <update id="update">
+update member set password=#{member.password} where id=#{member.id}
+</update> -->
+
+<delete id="delete">
+delete from member where id=#{id}
+</delete>
+
 </mapper>

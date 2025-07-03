@@ -13,17 +13,32 @@ public class MybatisMain {
 		
 		//MemberMapper.java (인터페이스파일-MemberMapper.xml)
 		//MemberMapper.xml 만들기 전 설정파일 플러그인 설치
-		//MemberMapper.xml생성
-		//MemberMapper.java생성
-		//MemberMapper.java를 사용할 MapperService.java파일 생성
-		//VO객체도 반드시 bean으로 생성해둬야한다.@Component
+		//1)MemberMapper.xml생성
+		//2)MemberMapper.java생성
+		//MemberMapper.java를 사용할 3)MapperService.java파일 생성
+		//4)Member VO객체도 반드시 bean으로 생성해둬야한다.@Component
 		ApplicationContext ctx 
 		=new ClassPathXmlApplicationContext("mybatis/setting.xml");
 		MemberService service = 
 		(MemberService)ctx.getBean("memberService",mybatis.MemberService.class);
-		service.save("user3","1234");
+		//service.save("user3","1234");
 		//오류사항 : mybatis버전 오류인한 에러발생(2 version으로 변경)
 		//테이블 전체를 사용하지 않을 경우 빈값여부 확인
+		
+		//System.out.println(service.getMember("M001"));
+		//System.out.println(service.getMemberList());
+		
+		/*
+		Member member=new Member();
+		member.setId("M001");
+		member.setPassword("1111");
+		service.update(member);
+		System.out.println(service.getMember("M001"));
+		*/
+		
+		System.out.println(service.delete("user1"));
+		System.out.println(service.getMemberList());
+		
 	}
 
 }

@@ -12,9 +12,9 @@ public interface MemberMapper {
 	//id=값 형태는 @Param이 필요없음, 
 	//속성=값이 아닌 값만 들어 있는 values(값, 값) 형태는 @Param사용
 	
-	//public String select(String id);
-	//public List<Member> getList();
-	//public int update(Member member);
-	//public int delete(String id);
+	public Member findById(String id);
+	public List<Member> findAll();
+	public int update(Member member);
+	public int delete(String id);
 
 }
