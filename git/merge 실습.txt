@@ -1,0 +1,75 @@
+##git 합치기(merge) : 
+mkdir mergework
+cd mergework
+git init
+
+C:\Users\seoil\mergework>copy con work01.txt
+update1
+ctrl+c
+
+git add . && git commit -m "update1"
+git branch
+git branch -M main
+git branch
+git checkout -b feature/work2
+
+C:\Users\seoil\mergework>copy con work02.txt
+work2
+ctrl+c
+
+git branch
+git add . && git commit -m "update2"
+
+##main으로 돌아간 후 work3를 입력하면 work1과 work3이 생기고 이후  feature/work2를 합하는 merge실행
+git checkout main
+dir/w
+
+C:\Users\seoil\mergework>copy con work03.txt
+work03
+ctrl+c
+
+git add . && git commit -m "work3"
+git branch
+dir/w
+git log --all
+git merge feature/work2
+dir /a
+git branch
+
+##여러개의 브런치 합하기
+main
+├── feature/login
+├── feature/signup
+├── feature/profile
+git checkout -b feature/login
+echo "Login feature" > login.txt
+git add . && git commit -m "Add login feature"
+
+git checkout main
+git checkout -b feature/signup
+echo "Signup feature" > signup.txt
+git add . && git commit -m "Add signup feature"
+
+git checkout main
+git checkout -b feature/profile
+echo "Profile feature" > profile.txt
+git add . && git commit -m "Add profile feature"
+
+git checkout main
+
+# 첫 번째 브랜치 병합
+git merge feature/login
+
+# 두 번째 브랜치 병합
+git merge feature/signup
+
+# 세 번째 브랜치 병합
+git merge feature/profile
+
+git log --oneline --graph --all --decorate
+
+##fetch, pull
+fetch:
+충돌을 방지하고 신중하게 작업하고 싶을 때, 먼저 변화 내용을 확인하고 싶을 때
+pull:
+단순히 최신 내용을 바로 반영하고 싶은 경우, 빠르게 작업을 이어가고 싶을 때.
