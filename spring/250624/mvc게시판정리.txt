@@ -12,7 +12,7 @@ URL                                :Controller                                  
 BoardDao : save(Board board), findAll(), findById(int id), update(Board board), delete(int id); count();
 #작업순서
 1)maven web project
-2)pom.xml 라이브러정의
+2)pom.xml 라이브러리정의
 3)/WEB-INF/web.xml dispathcer-servlet.xml 등록
 4)/WEB-INF/dispatcher-servlet.xml 생성
 5-1)인터페이스 설계를 확인한 후 인터페이스 생성 : BoardDao.java
