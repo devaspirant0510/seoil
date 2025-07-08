@@ -47,7 +47,7 @@ Q)위의 각각에 파일에 뷰리절버를 등록해서 index.jsp를 실행
 <property name="suffix" value=".jsp"></property>
 </bean>
 
-컨트롤에 /member/index, /login/index, board/index를 uri등록하고
+컨트롤에 /member/index, /login/index, /board/index를 uri등록
 views/member/index.jsp
 views/login/index.jsp
 views/board/index.jsp
@@ -69,15 +69,13 @@ views/board/index.jsp
   	</listener-class>
   </listener>
   
-  <!-- member, login, board url을 DispatcherServlet객체가 별도관리 -->
-  <!-- 별도관리의 의미는 url을 각각 관리하겠다는 의미 -->
-  <!-- member url관리 -->
-  <servlet>
+
+<servlet>
   <servlet-name>member-dispatcher</servlet-name>
   <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
   <init-param>
    <param-name>contextConfigLocation</param-name>
-   <param-value>/WEB-INF/config/member-context.xml</param-value>
+   <param-value>/WEB-INF/config/member-servlet.xml</param-value>
   </init-param>
   <load-on-startup>1</load-on-startup>
   </servlet>
@@ -93,7 +91,7 @@ views/board/index.jsp
   <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
   <init-param>
    <param-name>contextConfigLocation</param-name>
-   <param-value>/WEB-INF/config/login-context.xml</param-value>
+   <param-value>/WEB-INF/config/login-servlet.xml</param-value>
   </init-param>
   <load-on-startup>1</load-on-startup>
   </servlet>
@@ -109,7 +107,7 @@ views/board/index.jsp
   <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
   <init-param>
    <param-name>contextConfigLocation</param-name>
-   <param-value>/WEB-INF/config/board-context.xml</param-value>
+   <param-value>/WEB-INF/config/board-servlet.xml</param-value>
   </init-param>
   <load-on-startup>1</load-on-startup>
   </servlet>
@@ -119,25 +117,21 @@ views/board/index.jsp
   <url-pattern>/board/*</url-pattern>
   </servlet-mapping>
 
+##컨트롤에 /member/index, /login/index, /board/index를 uri등록해야 하지만
+각 컨트롤러에는 /member, /login, /board 는 url을 RequestMapping할 필요가없음
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*****동작의 순서*****
+/member/index
+web.xml에서 /member/*에 해당하는 서블릿을 찾기
+적용되는 member-servlet.xml에 있는 viewResolver가 적용
+<beans:property name="prefix" value="/WEB-INF/views/member/"></beans:property>
+<beans:property name="suffix" value=".jsp"></beans:property>
+컨트롤러에 자동으로 /member/가 붙게되고 
+컨트롤러는 다음과 같이 작성되게 됨.
+@Controller
+public class MemberController {
+	@RequestMapping("index")
+	public String index() {
+		return "index"; //views/member/index.jsp
+	}
+}
