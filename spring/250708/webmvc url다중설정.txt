@@ -1,0 +1,143 @@
+DispatcherServlet.java는 web.xml등록(dispatcher-servlet.xml)
+
+Q. dispatcher-servlet.xml파일을 사용하지 않고 등록하는 방법은?
+web.xml에서 DispatcherServlet등록부분(<Servlet>)에서 설정파일을 변경
+
+<servlet>
+  <servlet-name>dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	<!-- 폼에서 컨트롤러로 파라메다 전송시 한글깨짐 처리 --> 
+  <init-param>
+  	<param-name>encoding</param-name>
+  	<param-value>UTF-8</param-value>
+  </init-param>
+  
+  <init-param>
+  <param-name>contextConfigLocation</param-name>
+  <param-value>
+  /WEB-INF/config/member-servlet.xml
+  /WEB-INF/config/board-servlet.xml
+  /WEB-INF/config/login-servlet.xml
+  </param-value>
+  </init-param>
+  </servlet>
+
+src/java/member, login, board 패키지 생성후
+MemberController, LoginController, BoardController를 작성후 어노테이션 적용
+*-servlet.xml 파일에 
+<context:component-scan base-package="board"/>
+<context:component-scan base-package="login"/>
+<context:component-scan base-package="member"/>
+를 스캔하여 각파일의 빈이 생성되는 확인
+
+Q)위의 각각에 파일에 뷰리절버를 등록해서 index.jsp를 실행
+*-servlet.xml 파일에
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<property name="prefix" value="/WEB-INF/views/member/"></property>
+<property name="suffix" value=".jsp"></property>
+</bean>
+
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<property name="prefix" value="/WEB-INF/views/login/"></property>
+<property name="suffix" value=".jsp"></property>
+</bean>
+
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<property name="prefix" value="/WEB-INF/views/board/"></property>
+<property name="suffix" value=".jsp"></property>
+</bean>
+
+컨트롤에 /member/index, /login/index, board/index를 uri등록하고
+views/member/index.jsp
+views/login/index.jsp
+views/board/index.jsp
+
+문제점 : 처음등록된 xml파일에 대해 view Resolver가 적용되는 문제가 발생
+해결방법: namespace(beans 네임스페이스)를 이용하여 처리
+전역변수로 설정, 리스너 등록, 각각의 서블릿 등록 및 맵핑
+#web.xml
+<!-- 리스너를 이용하여 전역변수를 이용, 설정파일을 통해 빈로드 -->
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>/WEB-INF/root-context.xml</param-value>
+  </context-param>
+  
+  <!-- spring.web라이브러리 -->
+  <listener>
+  	<listener-class>
+  	org.springframework.web.context.ContextLoaderListener
+  	</listener-class>
+  </listener>
+  
+  <!-- member, login, board url을 DispatcherServlet객체가 별도관리 -->
+  <!-- 별도관리의 의미는 url을 각각 관리하겠다는 의미 -->
+  <!-- member url관리 -->
+  <servlet>
+  <servlet-name>member-dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  <init-param>
+   <param-name>contextConfigLocation</param-name>
+   <param-value>/WEB-INF/config/member-context.xml</param-value>
+  </init-param>
+  <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+  <servlet-name>member-dispatcher</servlet-name>
+  <url-pattern>/member/*</url-pattern>
+  </servlet-mapping>
+    
+  <!-- login url관리 -->
+  <servlet>
+  <servlet-name>login-dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  <init-param>
+   <param-name>contextConfigLocation</param-name>
+   <param-value>/WEB-INF/config/login-context.xml</param-value>
+  </init-param>
+  <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+  <servlet-name>login-dispatcher</servlet-name>
+  <url-pattern>/login/*</url-pattern>
+  </servlet-mapping>
+  
+   <!-- board url관리 -->
+  <servlet>
+  <servlet-name>board-dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  <init-param>
+   <param-name>contextConfigLocation</param-name>
+   <param-value>/WEB-INF/config/board-context.xml</param-value>
+  </init-param>
+  <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+  <servlet-name>board-dispatcher</servlet-name>
+  <url-pattern>/board/*</url-pattern>
+  </servlet-mapping>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
