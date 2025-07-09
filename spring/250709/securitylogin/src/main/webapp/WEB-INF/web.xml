@@ -65,4 +65,9 @@ http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
   <url-pattern>/</url-pattern> <!-- pattern /, /* , /** (/admin/func1/func2) -->
   </servlet-mapping>
 
+<!-- 404에러 발생시 web.xml에 error-page등록 -->
+<error-page>
+<error-code>404</error-code>
+<location>/all/404</location>
+</error-page>
 </web-app>
