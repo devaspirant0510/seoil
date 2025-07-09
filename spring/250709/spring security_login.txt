@@ -66,39 +66,11 @@ System.out.println("Encoded password: " + encodedPassword);
 boolean isMatch = passwordEncoder.matches("1111", encodedPassword);
 System.out.println("Password matches: " + isMatch);
 
-##spring security 코드이해하기
+##############spring security 코드이해하기###############
 1)maven project(web)생성
 2)pom.xml에 기본설정하기(update, java jre설정)
-3)pom.xml에 security라이브러리 추가
-(web, config, core, taglibs, test)
-<!-- spring security  -->
-<dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-web</artifactId>
-    <version>5.6.3</version>
-</dependency>
-<dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-config</artifactId>
-    <version>5.6.3</version>
-</dependency>
-<dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-core</artifactId>
-    <version>5.6.3</version>
-</dependency>
-<dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-taglibs</artifactId>
-    <version>5.6.3</version>
-</dependency>
-<dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-test</artifactId>
-    <version>5.6.3</version>
-</dependency>
-
-3)web.xml
+3)pom.xml에 security라이브러리 추가(web, config, core, taglibs, test)
+4)web.xml
 리스너등록(xml bean설정)
 필터등록(utf설정 필터, security 필터)
 서브릿등록(DispatcherServlet 설정)
@@ -138,7 +110,7 @@ System.out.println("Password matches: " + isMatch);
 </filter-mapping> 
 
 <!-- 서블릿등록 -->
-<!-- 
+ 
 <servlet>
   <servlet-name>app-dispatcher</servlet-name>
   <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -153,12 +125,102 @@ System.out.println("Password matches: " + isMatch);
   <servlet-name>app-dispatcher</servlet-name>
   <url-pattern>/*</url-pattern>
   </servlet-mapping>
-  -->
 
+5)리스너에서 등록한  security-context.xml파일 설정
+namespace에서 security를 체크한 후 아래 내용입력
+<!-- Spring Security 설정 -->
+<security:http>
+<!--권한에 따라 uri접근 가능여부 확인 -->
+        <security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+        <security:intercept-url pattern="/user/**" access="hasRole('ROLE_USER')" />
+        <security:form-login login-page="/login" default-target-url="/home" />
+       <security:intercept-url pattern="/all/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')" />
 
+<!-- 로그인처리 -->
+<!-- get방식 /login -->
+        <!-- security처리:post방식의 /login -->
+        <!-- login-page는 form상자의 처음로그인이 실패할 때 get /login호출 -->
+        <!-- default-target-url : 로그인 성공시 이동페이지 -->
+        <security:form-login 
+        login-page="/login"  
+        default-target-url="/user/index" 
+        authentication-failure-url="/login?error=true"
+        username-parameter="username"
+        password-parameter="password"
+        />
 
+<!--로그아웃>    
+<!-- get 방식의 logout 컨트롤러에 선언  -->
+<!-- logout-url : post방식의 url을 주소의미 -->
+<security:logout logout-url="/logout" logout-success-url="/login?logout=ture" />
+    </security:http>
 
+<!--계정을 설정 -->
+    <!--
+    단순하게 몇명의 사용자만 로그인이 필요한 경우 직접입력하여 로그인관리 
+    인증 정보 소스 (여기서는 메모리 기반 사용) 
+    로그인을 하면 인증권한을 부여하는데 이 속성은 authorities, 
+    http에서 access 권한을 가지게 됨
+    -->
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:user-service>
+                <security:user name="admin" password="{noop}1234" authorities="ROLE_ADMIN" />
+                <security:user name="user" password="{noop}1234" authorities="ROLE_USER" />
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
 
+6)서블릿을 등록하여 처리
+app-servlet.xml파일을 열고
+namespaces에서 context, mvc 체크, beans 체크해제 후 체크
+<beans> -> <beans:beans>변경
+view Resolver등록, 어노테이션 스캔 처리
 
+7)security-context.xml의 url을 확인하고 각각의 컨트롤러 생성
+AdminController, UserController, LoginController 3개 생성
 
- 
+8)로그인페이지에 포함할 사항
+Responding with 403 status code
+Invalid CSRF token found
+<input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}">
+
+9)role권한에 관한 사항 확인
+access="hasRole('ROLE_ADMIN')" : 권한이 접근 가능
+access="hasRole('ROLE_USER') and hasRole('ROLE_ADMIN')"
+access="isAuthenticated()" :인증이 되었으면 접근가능
+access="denyAll" : 모두 거절
+access="permitAll" : 모두 수락
+
+10)로그아웃처리
+security 설정파일에 http코드는 로그인, 로그아웃 post방식이므로 post방식으로 호출해야하며
+csrf코드를 hidden상태에서 전송해야 문제가 해결됨.
+추가적으로 csrf코드를 설정하는 코드가 존재함
+질의)spring legacy security xml파일 설정에서 csrf해제하는 설정
+<security:csrf disabled="true"/>
+하지만 위의 코드는 테스트외에 사용하지 말것
+
+11)사용자 정보에 대한 사항
+pom.xml security-taglibs 라이브러 추가
+
+jsp파일에서 사용자 정보보기 방법
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<sec:authentication property="name"/>
+<p>Authenticated User: ${principal.username} =>principal 직접사용불가 화면표시안됨 </p>
+사용자 정보를 태그라이브러리 변수에 입력 후 사용가능
+<sec:authentication property="principal" var="user"/>
+<p>Authenticated User: ${user.username}</p>
+<p>Authenticated User: <sec:authentication property="name"/> </p>
+
+12)페이지를 찾지 못했을 경우 에러처리
+web.xml 에 아래 코드 추가하고 컨트롤러에 location url처리
+<error-page>
+<error-code>404</error-code>
+<location>/all/404</location>
+</error-page>
+
+13)접근거절 403에러 발생시
+security-context.xml파일에 
+<security:http>
+<security:access-denied-handler error-page="/all/403"/>
+</security:http>
