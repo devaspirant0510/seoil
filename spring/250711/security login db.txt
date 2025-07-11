@@ -148,19 +148,53 @@ MemberController.jva, MemberService.java, MemberMapper.xml, MemberMapper.java,Me
 #데이터베이스를 사용하기 위한 설정파일 확인
 mybatis-config.xml(특정한 db사용할 경우 설정)
 
-#초기에 설정한 mybatis
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+#초기에 설정한 mybatis(주의사항 : db.properties 를 resources에 위치, mybatis-spring:scan base-package 폴더 확인, 라이브러리 반드시 확인)
 
-<context:property-placeholder location="classpath:db.properties"/>
+#mybatis에 필요한 라이브러리 파일
+<!-- mybatis라이브러리 파일 확인 -->
+<dependency>
+    <groupId>com.oracle.database.jdbc</groupId>
+    <artifactId>ojdbc11</artifactId>
+    <version>23.8.0.25.04</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-jdbc</artifactId>
+    <version>5.3.39</version>
+</dependency>	
+<dependency>
+    <groupId>com.zaxxer</groupId>
+    <artifactId>HikariCP</artifactId>
+    <version>6.3.0</version>  
+    <!-- <version>3.4.5</version> -->
+</dependency>
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis</artifactId>
+    <version>3.5.19</version>
+</dependency>	
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis-spring</artifactId>
+    <version>2.0.5</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
+<dependency>
+    <groupId>jakarta.xml.bind</groupId>
+    <artifactId>jakarta.xml.bind-api</artifactId>
+    <version>2.3.2</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
+<dependency>
+    <groupId>org.glassfish.jaxb</groupId>
+    <artifactId>jaxb-runtime</artifactId>
+    <version>2.3.2</version>
+</dependency>
+
+
+#mybatis-config.xml
+<context:property-placeholder location="classpath:db.properties"/><!--반드시 확인 resources에 위치-->
 <!-- hikari datasource는 설정파일과 데이터소스가 분리되어 있다. -->
 <bean id="hikariconfig" class="com.zaxxer.hikari.HikariConfig">
 <property name="driverClassName" value="${db.driverClassName}"></property>
@@ -168,7 +202,7 @@ mybatis-config.xml(특정한 db사용할 경우 설정)
 <property name="username" value="${db.username}"></property>
 <property name="password" value="${db.password}"></property>
 </bean>
-<!-- 최종사용할 객체 -->
+
 <bean id="hikariDataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
 <constructor-arg ref="hikariconfig"/>
 </bean>
@@ -177,44 +211,21 @@ mybatis-config.xml(특정한 db사용할 경우 설정)
 <property name="dataSource" ref="hikariDataSource"/>
 </bean>
 
+<mybatis-spring:scan base-package="member"/> <!--반드시 확인-->
 
-<!-- MemberMapper.xml 파일을 스캔하는 역할(객체로 변환) -->
-<mybatis-spring:scan base-package="member"/> 
+#회원가입
+MemberController.java : RegisterForm.java
+MemberService.java : Member.java
+MemberMapper.java
+MemberMapper.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member.MemberMapper"><!--반드시 확인-->
+<insert id="save" parameterType="member.Member">
+insert into member(username,password,email,role,regdate) 
+values(#{username},#{password},#{email},#{role},#{regdate})
+</insert>
 
-</beans>
+</mapper>
 
-#새로운 mybatis환경설정
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
-
-<configuration>
-
-  <!-- 데이터베이스 연결 설정 -->
-  <environments default="development">
-    <environment id="development">
-      <transactionManager type="JDBC">
-        <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
-        <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
-        <property name="username" value="test"/>
-        <property name="password" value="1111"/>
-      </transactionManager>
-      <dataSource type="POOLED">
-        <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
-        <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
-        <property name="username" value="test"/>
-        <property name="password" value="1111"/>
-      </dataSource>
-    </environment>
-  </environments>
-
-  <!-- 매퍼 파일 경로 설정 -->
-  <mappers>
-    <mapper resource="board/mapper/MemberMapper.xml"/>
-    <!-- <mapper class="board/mapper/MemberMapper"/> -->
-  </mappers>
-
-</configuration>
-
-
-
-
+#동작여부 확인
