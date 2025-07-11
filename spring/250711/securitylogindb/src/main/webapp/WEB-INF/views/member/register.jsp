@@ -10,7 +10,7 @@
 </head>
 <body>
 <h1>회원가입</h1>
-<form action="/register" method="post">
+<form action="/member/register" method="post">
 <div>
 <label>아이디</label>
 <input type="text" name="username">
