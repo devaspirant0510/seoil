@@ -1,0 +1,26 @@
+1)프로젝트 : securitylogindb
+2)pom.xml설정(maven update, java build path설정)
+3)webapp/WEB-INF/web.xml설정
+#리스너(전역설정)
+root-context.xml :db설정(resource사용해서 파일을 포함)
+또는 별도로 설정할 경우
+db-config.xml (데이터베이스 설정정보)
+mybatis-config.xml(특정한 db사용할 경우 설정)
+security-config.xml(시큐리티)
+
+#필터 : 한글처리, DelegatingFilterProxy 시큐리티 필터
+
+#서블릿 : 로그인, 회원가입, 게시판, 챗팅 등의 기능을 폴더로 구분
+폴더구분은 서블릿설정도 별도로 구성
+로그인 : 서블릿이름(login-dispatcher),설정파일( login-servlet.xml), url패턴(/login/*)
+java/login폴더 -> Controller, Service, Repository, vo,etc..
+webapp/WEB-INF/config/login-servlet.xml -> @스캔, viewResolver
+webapp/WEB-INF/views/login -> jsp
+
+회원(회원가입, 회원정보수정, 아이디찾기, 패스워드찾기, 탈퇴):
+서블릿이름(member-dispatcher),설정파일( member-servlet.xml), url패턴(/member/*)
+java/member폴더 -> Controller, Service, Repository, vo,etc..
+webapp/WEB-INF/config/member-servlet.xml -> @스캔, viewResolver
+webapp/WEB-INF/views/member -> jsp
+
+4)설정후에 서버를 import하여 서버 실행 후 오류사항 확인
