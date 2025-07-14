@@ -39,6 +39,10 @@ intercept-url을 자바파일에서 처리가능
    security에서 구현할 객체(UserDetailsService)를 받아서 처리 -->
     <security:authentication-manager>
         <security:authentication-provider user-service-ref="loginService">
+       <security:password-encoder ref="bpe"/>
         </security:authentication-provider>
     </security:authentication-manager>
+    
+    <bean id="bpe" 
+class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 </beans>
