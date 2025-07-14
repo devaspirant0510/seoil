@@ -49,8 +49,7 @@ public class MyWebAppInitializer implements WebApplicationInitializer {
     securityFilter.setContextAttribute("org.springframework.web.servlet.FrameworkServlet.CONTEXT.dispatcher");  // 중요!
     servletContext.addFilter("springSecurityFilterChain", securityFilter)
                   .addMappingForUrlPatterns(null, false, "/*");
- 	}
- 
+ 	 
      //3. DispatcherServlet 등록     
      AnnotationConfigWebApplicationContext loginServlet 
      = new AnnotationConfigWebApplicationContext();
