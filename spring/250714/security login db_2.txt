@@ -47,5 +47,26 @@ security-context.xml파일에 다음 내용을 추가 security:authentication-ma
 <bean id="bpe" 
 class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
+#폼에서 넘어온 값은 암호가 된다.
+db가 암호가 된 경우
+User user=new User(member.getUsername(),member.getPassword(),authorities);
+
+db가 암호화가 안된 경우
+User user=new User(member.getUsername(), 
+new BCryptPasswordEncoder().encode(member.getPassword()),authorities);
+
 3)dao는 사용자 직접 구현(sql문)
 
+
+추가사항)
+시나리오1: localhost:8888 실행할 경우 url page가 없는 경우 오류가 발생하는데 무조건 로그인페이지 이동하는 방법?
+<security:http>
+ <security:http-basic entry-point-ref="authenticationEntryPoint" />
+</http>
+<bean id="authenticationEntryPoint" 
+class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+        <constructor-arg name="loginFormUrl" value="/login/login"/>
+</bean>
+
+시나리오2:인증된 사용자만 페이지를 볼 수 있으며 그 외 사용자는 로그인 페이지로 이동
+<security:intercept-url pattern="/*" access="isAuthenticated()"/>
