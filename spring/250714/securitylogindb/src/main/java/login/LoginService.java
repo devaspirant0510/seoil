@@ -61,12 +61,36 @@ public class LoginService implements UserDetailsService{
 		*/
 		
 		//암호화 처리
+		//db의 현 상태는 암호가 되지 않은 상태, 
+		//패스워드가 암호가 된 상태에 입력되어야하는지? 
+		//암호가 되지 않은 상태에서 입력되어야 하는지 확인?
+		
+		/*
+		User user
+		=new User(member.getUsername(),member.getPassword(),authorities);
+		*/
+		
+		//폼의 password:1234, member의 password는 1234
+		//new User()객체를 이용하여 패스워드를 비교할 때 
+		//폼의 password는 1234가 아닌 암호화된 1234와
+		//, new User의 password의 암호화된 값이 비교
+		
+		//추가적인 사항은 db의 password가 암호가 되어 있을 경우 encode()함수가 필요한가?
+		//암호화된 db일 경우 encode()함수가 필요없음
+		
+		//결론적으로 암호화 되어 있는 경우 아래 코드 사용
+		/*
+		User user
+		=new User(member.getUsername(),member.getPassword(),authorities);
+		*/
+		
+		//db가 암호가 되어 있지 않은 경우 아래 코드 사용
 		User user=
 		new User(member.getUsername(), 
 				new BCryptPasswordEncoder().encode(member.getPassword()),
 				authorities);
-
-		System.out.println(user);
+		
+		System.out.println("user 정보:"+user);
 		return user;
 	}
 

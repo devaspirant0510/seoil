@@ -17,4 +17,5 @@ bean을 해당 파일에서 등록해줌
 <!-- 두번째 방법: @Service선언을 하지 않고 bean을 생성 -->
 <bean id="loginService" class="login.LoginService"/>
 <!-- 결론 : 두방법 중 어느것이 효율적인지 생각, 하나만 결정하여 처리 -->
+
 </beans>

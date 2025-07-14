@@ -81,7 +81,21 @@ http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
   <servlet-name>memebr-dispatcher</servlet-name>
   <url-pattern>/member/*</url-pattern> 
   </servlet-mapping>
-
+  <!-- page에 대한 url mapping이 있어야 처리되면 리스너는 해당 역할을 할 수 없음 -->
+   <servlet>
+  <servlet-name>page-dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  <init-param>
+   <param-name>contextConfigLocation</param-name>
+   <param-value>/WEB-INF/config/page-servlet.xml</param-value>
+  </init-param>
+  <load-on-startup>1</load-on-startup>
+</servlet>
+  <servlet-mapping>
+  <servlet-name>page-dispatcher</servlet-name>
+  <url-pattern>/</url-pattern> 
+  </servlet-mapping>
+  
 <!-- 404에러 발생시 web.xml에 error-page등록 -->
 <error-page>
 <error-code>404</error-code>
